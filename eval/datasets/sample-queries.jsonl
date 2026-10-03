@@ -1,0 +1,20 @@
+{"query": "What is the weekly standup schedule and where are the notes kept?", "relevant_id": "10-19 Project Management/standup.md", "kind": "natural"}
+{"query": "How do I reset my local database and reseed the fixtures?", "relevant_id": "30-39 Engineering/dev-setup.md", "kind": "natural"}
+{"query": "reset database seed fixtures local dev", "relevant_id": "30-39 Engineering/dev-setup.md", "kind": "keyword"}
+{"query": "What is the escalation path when the on-call engineer cannot resolve an incident?", "relevant_id": "30-39 Engineering/incident-response.md", "kind": "natural"}
+{"query": "on-call escalation page severity incident", "relevant_id": "30-39 Engineering/incident-response.md", "kind": "keyword"}
+{"query": "Which metrics should trigger a capacity review for the API tier?", "relevant_id": "30-39 Engineering/capacity.md", "kind": "natural"}
+{"query": "How does the expense approval workflow handle amounts above the manager limit?", "relevant_id": "40-49 Operations/expenses.md", "kind": "natural"}
+{"query": "What are the guidelines for naming branches and writing commit messages?", "relevant_id": "30-39 Engineering/git-workflow.md", "kind": "natural"}
+{"query": "branch naming commit message convention pull request", "relevant_id": "30-39 Engineering/git-workflow.md", "kind": "keyword"}
+{"query": "Where is the style guide for product copy and error messages?", "relevant_id": "50-59 Product/copy-style.md", "kind": "natural"}
+{"query": "What is the process for requesting access to the analytics dashboard?", "relevant_id": "40-49 Operations/access-requests.md", "kind": "natural"}
+{"query": "Which vendor do we use for transactional email and what are the rate limits?", "relevant_id": "40-49 Operations/email-vendor.md", "kind": "natural"}
+{"query": "How are quarterly OKRs drafted and reviewed before the all-hands?", "relevant_id": "10-19 Project Management/okrs.md", "kind": "natural"}
+{"query": "OKR draft review all-hands quarterly", "relevant_id": "10-19 Project Management/okrs.md", "kind": "keyword"}
+{"query": "What backup schedule protects the primary datastore and how are restores tested?", "relevant_id": "30-39 Engineering/backups.md", "kind": "natural"}
+{"query": "restore drill backup schedule RPO RTO datastore", "relevant_id": "30-39 Engineering/backups.md", "kind": "keyword"}
+{"query": "What does the hiring loop look like for a senior engineer?", "relevant_id": "20-29 People/hiring-loop.md", "kind": "natural"}
+{"query": "How do I file a bug report that the triage team can actually act on?", "relevant_id": "30-39 Engineering/bug-reports.md", "kind": "natural"}
+{"query": "reproduction steps expected actual triage bug template", "relevant_id": "30-39 Engineering/bug-reports.md", "kind": "keyword"}
+{"query": "What is the policy for storing customer data in local development environments?", "relevant_id": "40-49 Operations/data-handling.md", "kind": "natural"}
