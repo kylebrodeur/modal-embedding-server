@@ -3,6 +3,7 @@
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 ![Python](https://img.shields.io/badge/Python-3.12-blue.svg)
 ![Modal](https://img.shields.io/badge/Deploy%20to-Modal-green.svg)
+[![Sponsor](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-pink.svg)](https://github.com/sponsors/kylebrodeur)
 
 
 
