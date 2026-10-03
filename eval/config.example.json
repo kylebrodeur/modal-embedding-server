@@ -1,0 +1,54 @@
+{
+	"_comment": "Copy to eval/config.json and set the corpus path. Providers: ollama (local + Cloud), hf (Hugging Face Inference), modal (this repo's server). Embedders are skipped automatically if a model/key/host is missing. The harness reports each model's actual output dim, so dims need not be set here.",
+
+	"_corpus_note": "Point 'path' at an Obsidian/markdown vault directory (type 'markdown') OR a JSONL file. For a bigger benchmark, point it at a larger vault and raise/remove 'limit' so all notes load (more notes = less saturation = real discrimination).",
+	"_chunk_note": "Set chunk.enabled=true to header-split notes into breadcrumb-prefixed chunks instead of embedding whole notes. Queries stay note-level and scoring collapses chunks back to their parent note, so a chunked run and a whole-note run are directly comparable: run it both ways and compare recall.",
+	"corpus": {
+		"path": "/ABSOLUTE/PATH/TO/your-larger-vault",
+		"type": "markdown",
+		"exclude_globs": ["**/91 Templates/**", "**/.obsidian/**", "**/Templates/**"],
+		"min_chars": 80,
+		"limit": 5000,
+		"chunk": { "enabled": false, "max_chars": 1500, "overlap_chars": 200 }
+	},
+
+	"queries": {
+		"_note": "STABLE benchmark: set 'path' to a labeled JSONL (e.g. eval/datasets/sample-queries.jsonl, or your own). UNLABELED vault: set 'path' to null to auto-generate. 'sample' = notes sampled; 'per_note' = queries per note (total ≈ sample×per_note); 'max_context_chars' = how much of each note the generator reads. The generator paraphrases and varies query style so the set actually tests semantic retrieval, not keyword overlap. Generator 'host' is independent of the embedders' host (a CLOUD generator can pair with LOCAL embedders); for an Ollama Cloud model `ollama signin` and keep host on localhost (daemon proxies it), or set 'host' to https://ollama.com + export OLLAMA_API_KEY. TIP: cache the generated set with `--queries PATH` so a chunking A/B reuses identical queries.",
+		"path": null,
+		"auto_generate": {
+			"sample": 150,
+			"per_note": 3,
+			"max_context_chars": 2000,
+			"ollama_model": "gemma4:31b-cloud",
+			"host": null
+		}
+	},
+
+	"recall_k": [1, 5, 10],
+
+	"embedders": [
+		{ "name": "embeddinggemma", "provider": "ollama", "model": "embeddinggemma" },
+		{ "name": "bge-m3", "provider": "ollama", "model": "bge-m3" },
+		{ "name": "bge-large", "provider": "ollama", "model": "bge-large" },
+		{ "name": "qwen3-embedding-0.6b", "provider": "ollama", "model": "qwen3-embedding:0.6b" },
+		{ "name": "nomic-embed-text", "provider": "ollama", "model": "nomic-embed-text" },
+		{ "name": "mxbai-embed-large", "provider": "ollama", "model": "mxbai-embed-large" },
+		{ "name": "paraphrase-multilingual", "provider": "ollama", "model": "paraphrase-multilingual" },
+		{ "name": "all-minilm (current local fallback)", "provider": "ollama", "model": "all-minilm" }
+	],
+
+	"_embedders_other_providers_example": [
+		{
+			"name": "embeddinggemma (hf inference)",
+			"provider": "hf",
+			"model": "google/embeddinggemma-300m",
+			"_note": "needs HF_TOKEN"
+		},
+		{
+			"name": "embeddinggemma (modal)",
+			"provider": "modal",
+			"model": "embeddinggemma",
+			"_note": "needs MODAL_EMBED_URL + MODAL_EMBED_API_TOKEN + deployed server/app.py"
+		}
+	]
+}
