@@ -1,0 +1,33 @@
+[project]
+name = "modal-embedding-server"
+version = "0.1.0"
+description = "Generic GPU embedding service on Modal with sync protocol and model-selection evals."
+requires-python = ">=3.10"
+dependencies = [
+    "modal>=1.6.1",
+]
+
+# Test/dev deps only. The heavy ML stack (torch, sentence-transformers) is
+# deliberately NOT listed here: the model layer is mocked in the test suite so
+# `uv run pytest tests` works on a laptop with no GPU and no ML install. Those
+# packages are baked into the Modal image (see app.py) for production.
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "lancedb>=0.16.0",
+    "pyarrow>=17.0.0",
+    "fastapi[standard]>=0.115.0",
+    "httpx>=0.27.0",
+    "ruff>=0.16.9",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+only-include = ["app.py", "config.py", "embedders.py", "store.py", "datagen.py"]
