@@ -4,7 +4,7 @@
 ![Python](https://img.shields.io/badge/Python-3.12-blue.svg)
 ![Modal](https://img.shields.io/badge/Deploy%20to-Modal-green.svg)
 
-[![Deploy to Modal](https://modal.com/api/submit_image/button/deploy-to-modal-blue.svg)](https://modal.com/deploy)
+
 
 A comprehensive GPU-accelerated stack for embedding large-scale corpora, evaluating model performance, and syncing vectors to local clients.
 
