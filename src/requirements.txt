@@ -1,0 +1,22 @@
+# Dependencies for the pi-vault-mind Modal embedding app.
+#
+# This project uses uv. You normally don't need this file:
+#   - The Modal CLI runs via `uvx modal …` (ephemeral) or `uv tool install modal`.
+#   - `modal/client_example.py` declares its deps as PEP 723 inline metadata, so
+#     `uv run modal/client_example.py` resolves them on its own.
+#   - The heavy ML stack below is baked into the Modal *image* (see app.py),
+#     not your laptop.
+#
+# It's kept only as a plain-pip fallback / dependency reference:
+#   uv pip install -r modal/requirements.txt   # (or: pip install -r …)
+modal>=0.64.0
+requests>=2.31.0
+
+# --- baked into the Modal image (listed for reference) ---
+# sentence-transformers>=5.0.0
+# transformers>=4.56.0
+# torch>=2.4.0
+# lancedb>=0.16.0
+# pyarrow>=17.0.0
+# fastapi[standard]>=0.115.0
+# huggingface_hub>=0.25.0

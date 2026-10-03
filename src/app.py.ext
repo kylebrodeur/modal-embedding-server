@@ -1,0 +1,301 @@
+"""pi-vault-mind embedding service on Modal.
+
+Three capabilities, one App:
+
+1. **On-demand embedding** — low-latency ``POST /embed`` for interactive
+   ``wiki_search`` queries and small appends.
+2. **Bulk background jobs** — ``POST /jobs`` spawns a GPU worker that embeds
+   many records and writes them to the Volume-backed LanceDB; poll
+   ``GET /jobs/{id}`` for progress.
+3. **Sync** — ``GET /sync/collections`` and ``GET /sync/export`` let the local
+   extension pull new vectors down into its own ``.lancedb``.
+
+Deploy (uvx runs the Modal CLI in an ephemeral env — no global install):
+    uvx modal deploy modal/app.py
+Run locally against the deployed app:
+    uv run modal/client_example.py
+
+See modal/README.md for secret setup.
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import time
+import uuid
+
+import modal
+
+import config
+from embedders import REGISTRY, get_spec
+
+# ── Image ─────────────────────────────────────────────────────────────────────
+image = (
+    modal.Image.debian_slim(python_version="3.12")
+    .pip_install(
+        "sentence-transformers>=5.0.0",
+        "transformers>=4.56.0",
+        "torch>=2.4.0",
+        "lancedb>=0.16.0",
+        "pyarrow>=17.0.0",
+        "fastapi[standard]>=0.115.0",
+        "huggingface_hub>=0.25.0",
+    )
+    # Keep all HF caches on the cache Volume.
+    .env({"HF_HOME": config.CACHE_DIR, "SENTENCE_TRANSFORMERS_HOME": config.CACHE_DIR})
+    # Ship our own modules into the container.
+    .add_local_python_source("config", "embedders", "store")
+)
+
+app = modal.App(config.APP_NAME, image=image)
+
+vectors_volume = modal.Volume.from_name(config.VECTORS_VOLUME_NAME, create_if_missing=True)
+cache_volume = modal.Volume.from_name(config.CACHE_VOLUME_NAME, create_if_missing=True)
+
+VOLUMES = {config.VECTORS_DIR: vectors_volume, config.CACHE_DIR: cache_volume}
+
+# Secrets are optional at import time so the file still loads for `modal run`
+# in environments where they're not yet created; the functions that need them
+# declare them explicitly below.
+auth_secret = modal.Secret.from_name(config.AUTH_SECRET_NAME)
+hf_secret = modal.Secret.from_name(config.HF_SECRET_NAME)
+
+
+# ── Job status helpers (persisted on the Volume) ──────────────────────────────
+def _job_path(job_id: str) -> str:
+    return f"{config.JOBS_DIR}/{job_id}.json"
+
+
+def _write_job(job_id: str, **fields) -> None:
+    os.makedirs(config.JOBS_DIR, exist_ok=True)
+    path = _job_path(job_id)
+    doc = {}
+    if os.path.exists(path):
+        with open(path) as fh:
+            doc = json.load(fh)
+    doc.update(fields)
+    doc["updated_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+    with open(path, "w") as fh:
+        json.dump(doc, fh)
+    vectors_volume.commit()
+
+
+def _read_job(job_id: str) -> dict | None:
+    vectors_volume.reload()
+    path = _job_path(job_id)
+    if not os.path.exists(path):
+        return None
+    with open(path) as fh:
+        return json.load(fh)
+
+
+# ── Bulk worker ───────────────────────────────────────────────────────────────
+@app.function(
+    gpu=config.GPU,
+    volumes=VOLUMES,
+    secrets=[hf_secret],
+    timeout=60 * 60,  # long jobs allowed
+)
+def embed_batch(
+    job_id: str,
+    collection: str,
+    model: str,
+    dim: int | None,
+    records: list[dict],
+) -> dict:
+    """Embed ``records`` (each {id, text, metadata?}) and upsert to the store."""
+    import store
+
+    spec = get_spec(model)
+    resolved_dim = spec.resolve_dim(dim)
+    total = len(records)
+    _write_job(
+        job_id,
+        status="running",
+        collection=collection,
+        model=model,
+        dim=resolved_dim,
+        total=total,
+        processed=0,
+        started_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+    )
+
+    try:
+        from embedders import embed as embed_texts
+
+        processed = 0
+        for start in range(0, total, config.BATCH_SIZE):
+            chunk = records[start : start + config.BATCH_SIZE]
+            texts = [r.get("text", "") for r in chunk]
+            vectors = embed_texts(
+                spec, texts, task="document", dim=resolved_dim,
+                cache_dir=config.CACHE_DIR, batch_size=config.BATCH_SIZE,
+            )
+            rows = [
+                {
+                    "id": r["id"],
+                    "text": r.get("text", ""),
+                    "vector": v,
+                    "metadata": r.get("metadata", {}),
+                    "created_at": r.get("created_at"),
+                }
+                for r, v in zip(chunk, vectors)
+            ]
+            store.upsert(collection, model, resolved_dim, rows)
+            vectors_volume.commit()
+            processed += len(chunk)
+            _write_job(job_id, processed=processed)
+
+        _write_job(
+            job_id,
+            status="done",
+            processed=processed,
+            finished_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        )
+        return {"job_id": job_id, "status": "done", "processed": processed}
+    except Exception as exc:  # noqa: BLE001 - surface any failure to the client
+        _write_job(job_id, status="error", error=str(exc))
+        raise
+
+
+# ── On-demand + sync web service ──────────────────────────────────────────────
+@app.cls(
+    gpu=config.GPU,
+    volumes=VOLUMES,
+    secrets=[auth_secret, hf_secret],
+    scaledown_window=config.SCALEDOWN_WINDOW,
+    # min_containers=1,  # uncomment to keep one warm and kill cold starts
+)
+@modal.concurrent(max_inputs=config.MAX_CONCURRENT_INPUTS)
+class EmbeddingService:
+    @modal.enter()
+    def _startup(self):
+        # Warm the canonical model so the first request is fast.
+        from embedders import load_model
+
+        load_model(get_spec(config.DEFAULT_MODEL), config.CACHE_DIR)
+
+    @modal.asgi_app()
+    def fastapi_app(self):
+        from fastapi import Depends, FastAPI, Header, HTTPException
+        from pydantic import BaseModel, Field
+
+        import store
+        from embedders import embed as embed_texts
+
+        api_token = os.environ.get("API_TOKEN", "")
+
+        def require_auth(authorization: str | None = Header(default=None)):
+            if not api_token:  # misconfigured deploy → fail closed
+                raise HTTPException(503, "Server auth not configured")
+            expected = f"Bearer {api_token}"
+            if authorization != expected:
+                raise HTTPException(401, "Invalid or missing bearer token")
+
+        web = FastAPI(title="pi-vault-mind embeddings", version="0.1.0")
+
+        # ── request models ────────────────────────────────────────────────
+        class EmbedRequest(BaseModel):
+            texts: list[str]
+            model: str = config.DEFAULT_MODEL
+            dim: int | None = None
+            task: str = "query"  # "query" | "document"
+
+        class JobRequest(BaseModel):
+            collection: str
+            records: list[dict] = Field(..., description="[{id, text, metadata?}]")
+            model: str = config.DEFAULT_MODEL
+            dim: int | None = None
+
+        # ── routes ────────────────────────────────────────────────────────
+        @web.get("/health")
+        def health():
+            return {"ok": True, "default_model": config.DEFAULT_MODEL}
+
+        @web.get("/models")
+        def models():
+            return {
+                "default": config.DEFAULT_MODEL,
+                "models": [
+                    {
+                        "key": s.key,
+                        "hf_id": s.hf_id,
+                        "native_dim": s.native_dim,
+                        "matryoshka_dims": list(s.matryoshka_dims),
+                        "gated": s.gated,
+                        "notes": s.notes,
+                    }
+                    for s in REGISTRY.values()
+                ],
+            }
+
+        @web.post("/embed", dependencies=[Depends(require_auth)])
+        def embed(req: EmbedRequest):
+            if req.task not in ("query", "document"):
+                raise HTTPException(400, "task must be 'query' or 'document'")
+            spec = get_spec(req.model)
+            out_dim = spec.resolve_dim(req.dim)
+            vectors = embed_texts(
+                spec, req.texts, task=req.task, dim=out_dim,
+                cache_dir=config.CACHE_DIR, batch_size=config.BATCH_SIZE,
+            )
+            return {"model": spec.key, "dim": out_dim, "vectors": vectors}
+
+        @web.post("/jobs", dependencies=[Depends(require_auth)])
+        def submit_job(req: JobRequest):
+            spec = get_spec(req.model)
+            resolved = spec.resolve_dim(req.dim)
+            job_id = uuid.uuid4().hex
+            _write_job(
+                job_id, status="queued", collection=req.collection,
+                model=spec.key, dim=resolved, total=len(req.records), processed=0,
+            )
+            call = embed_batch.spawn(
+                job_id, req.collection, spec.key, req.dim, req.records
+            )
+            return {"job_id": job_id, "call_id": call.object_id, "total": len(req.records)}
+
+        @web.get("/jobs/{job_id}", dependencies=[Depends(require_auth)])
+        def job_status(job_id: str):
+            doc = _read_job(job_id)
+            if doc is None:
+                raise HTTPException(404, "Unknown job_id")
+            return doc
+
+        @web.get("/sync/collections", dependencies=[Depends(require_auth)])
+        def sync_collections():
+            return {"collections": store.list_collections()}
+
+        @web.get("/sync/export", dependencies=[Depends(require_auth)])
+        def sync_export(
+            collection: str,
+            model: str = config.DEFAULT_MODEL,
+            dim: int | None = None,
+            since: int = 0,
+            limit: int = 500,
+        ):
+            spec = get_spec(model)
+            out_dim = spec.resolve_dim(dim)
+            return store.export_since(collection, spec.key, out_dim, since, limit)
+
+        return web
+
+
+# ── Local entrypoint for quick smoke testing ──────────────────────────────────
+@app.local_entrypoint()
+def main():
+    """`modal run modal/app.py` → embeds two strings and runs a tiny bulk job."""
+    print("Submitting a 3-record bulk job to the 'main' collection…")
+    result = embed_batch.remote(
+        job_id=uuid.uuid4().hex,
+        collection="main",
+        model=config.DEFAULT_MODEL,
+        dim=None,
+        records=[
+            {"id": "1", "text": "JWT tokens expire after one hour.", "metadata": {"tag": "auth"}},
+            {"id": "2", "text": "Refresh tokens live for 30 days.", "metadata": {"tag": "auth"}},
+            {"id": "3", "text": "The vault watcher polls every 2 seconds.", "metadata": {"tag": "watcher"}},
+        ],
+    )
+    print("Bulk job result:", result)
