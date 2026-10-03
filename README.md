@@ -2,9 +2,8 @@
 
 A comprehensive GPU-accelerated stack for embedding large-scale corpora, evaluating model performance, and syncing vectors to local clients.
 
-## 🌟 The Pillars
-
 This repository is organized into three specialized pillars to move you from "guessing" to "deployed."
+
 
 ### 1. Research (`/research`) — Generate
 **Goal:** Create high-quality synthetic datasets to test your retrieval.
@@ -25,7 +24,7 @@ This repository is organized into three specialized pillars to move you from "gu
 
 ---
 
-## 🛠️ Quick Start: The "Flight Path"
+## Quick Start: The "Flight Path"
 
 ### Step 1: Research & Eval (Picking your Model)
 If you aren't sure which model to use:
@@ -48,7 +47,7 @@ uvx modal secret create huggingface-secret HF_TOKEN=your_hf_token
 ### Step 4: Sync to your Client
 Set your `remoteUrl` in your client and run the sync process to pull your vectors down to your local machine.
 
-## 📡 Server API Summary
+## Server API Summary
 
 All routes except `/health` and `/models` require `Authorization: Bearer <TOKEN>`.
 
@@ -62,7 +61,7 @@ All routes except `/health` and `/models` require `Authorization: Bearer <TOKEN>
 | `GET` | `/sync/export`| Stream vectors for a collection since a specific watermark. |
 | `GET` | `/stats` | Get table sizes and GPU utilization. |
 
-## ⚙️ Server Configuration
+## Server Configuration
 
 The server is fully configurable via environment variables (prefixed with `MODAL_EMBED_`):
 
@@ -71,5 +70,5 @@ The server is fully configurable via environment variables (prefixed with `MODAL
 - `MODAL_EMBED_GPU`: Set to `""` for CPU, or specify a GPU type (e.g., `L4`).
 - `MODAL_EMBED_VECTORS_VOLUME_VERSION`: Must be `2` for LanceDB stability.
 
-## ⚖️ License
+## License
 Apache-2.0
