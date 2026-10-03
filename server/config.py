@@ -29,28 +29,28 @@ import os
 # ── Modal object names ────────────────────────────────────────────────────────
 # Keep these stable: renaming a Volume or App orphans the data behind it.
 
-APP_NAME = os.environ.get("PVM_APP_NAME", "pi-vault-mind-embed")
+APP_NAME = os.environ.get("MODAL_EMBED_APP_NAME", "modal-embedding-server")
 
 # Persistent Volume that holds the LanceDB dataset (the server-side vector
 # store). This is the thing we sync *down* to the local ``.lancedb``.
-VECTORS_VOLUME_NAME = os.environ.get("PVM_VECTORS_VOLUME", "pi-vault-mind-vectors")
+VECTORS_VOLUME_NAME = os.environ.get("MODAL_EMBED_VECTORS_VOLUME", "modal-embedding-vectors")
 VECTORS_DIR = "/vectors"
 # VolumeFS backend version. LanceDB writes require hardlink support, which is
 # only available on Modal Volume v2 (v1 lacks linkat → EPERM on commit). See
 # lance-format/lance#5775. Must match an existing Volume when set.
-VECTORS_VOLUME_VERSION = int(os.environ.get("PVM_VECTORS_VOLUME_VERSION", "2"))
+VECTORS_VOLUME_VERSION = int(os.environ.get("MODAL_EMBED_VECTORS_VOLUME_VERSION", "2"))
 
 # Separate Volume for cached HuggingFace model weights so cold starts don't
 # re-download EmbeddingGemma every time.
-CACHE_VOLUME_NAME = os.environ.get("PVM_CACHE_VOLUME", "pi-vault-mind-hf-cache")
+CACHE_VOLUME_NAME = os.environ.get("MODAL_EMBED_CACHE_VOLUME", "modal-embedding-hf-cache")
 CACHE_DIR = "/cache"
 
 # ── Secrets ───────────────────────────────────────────────────────────────────
 # Create with:
 #   modal secret create pi-vault-mind-auth API_TOKEN=$(openssl rand -hex 32)
 #   modal secret create huggingface-secret HF_TOKEN=hf_xxx
-AUTH_SECRET_NAME = os.environ.get("PVM_AUTH_SECRET", "pi-vault-mind-auth")
-HF_SECRET_NAME = os.environ.get("PVM_HF_SECRET", "huggingface-secret")
+AUTH_SECRET_NAME = os.environ.get("MODAL_EMBED_AUTH_SECRET", "embedding-auth")
+HF_SECRET_NAME = os.environ.get("MODAL_EMBED_HF_SECRET", "huggingface-secret")
 
 # ── Compute ───────────────────────────────────────────────────────────────────
 # GPU is OPTIONAL and config-driven. EmbeddingGemma-300m is small; an L4 is
@@ -58,40 +58,40 @@ HF_SECRET_NAME = os.environ.get("PVM_HF_SECRET", "huggingface-secret")
 # no GPU work and is free to proxy embedders served via Ollama / HF Inference
 # (backends that own their own compute). Keep the GPU/SentenceTransformer path
 # for self-hosting open-weight models on Modal.
-_gpu_env = os.environ.get("PVM_GPU", "L4")
+_gpu_env = os.environ.get("MODAL_EMBED_GPU", "L4")
 GPU = _gpu_env.strip() or None  # "" / "none" → CPU (None)
 
 # How long an idle container stays warm before scaling to zero (seconds).
-SCALEDOWN_WINDOW = int(os.environ.get("PVM_SCALEDOWN_WINDOW", "300"))
+SCALEDOWN_WINDOW = int(os.environ.get("MODAL_EMBED_SCALEDOWN_WINDOW", "300"))
 
 # Max concurrent requests a single on-demand container will accept. Embedding
 # is batch-friendly, so allow a handful to share the GPU.
-MAX_CONCURRENT_INPUTS = int(os.environ.get("PVM_MAX_CONCURRENT", "8"))
+MAX_CONCURRENT_INPUTS = int(os.environ.get("MODAL_EMBED_MAX_CONCURRENT", "8"))
 
 # ── Embedding defaults ────────────────────────────────────────────────────────
 # The canonical model for the project (eval-confirmed: EmbeddingGemma @ 768).
 # We standardized on EmbeddingGemma so that vectors produced on Modal are
 # directly usable by the local LanceDB. **This is a config value, not a
 # hard-coded constant in logic** — read it from here everywhere.
-DEFAULT_MODEL = os.environ.get("PVM_DEFAULT_MODEL", "embeddinggemma")
+DEFAULT_MODEL = os.environ.get("MODAL_EMBED_DEFAULT_MODEL", "embeddinggemma")
 
 # Default output dimension when a caller omits ``dim``. ``None`` resolves to
 # the model's native dim; set an int to force a Matryoshka truncation globally
 # (e.g. 512 to ship smaller vectors). Kept distinct from DEFAULT_MODEL so the
 # canonical model can be changed without touching dim policy.
-DEFAULT_DIM = os.environ.get("PVM_DEFAULT_DIM")
+DEFAULT_DIM = os.environ.get("MODAL_EMBED_DEFAULT_DIM")
 DEFAULT_DIM = int(DEFAULT_DIM) if DEFAULT_DIM and DEFAULT_DIM.strip() else None
 
 # Optional allow-list of enabled model keys (comma-separated). When set, only
 # those keys are exposed via /models and accepted by /embed + /jobs; unknown
 # keys raise. Empty/unset = all registered models enabled.
-_enabled = os.environ.get("PVM_ENABLED_MODELS", "")
+_enabled = os.environ.get("MODAL_EMBED_ENABLED_MODELS", "")
 ENABLED_MODELS: tuple[str, ...] | None = (
     tuple(k.strip() for k in _enabled.split(",") if k.strip()) if _enabled.strip() else None
 )
 
 # Records-per-forward-pass when embedding in bulk.
-BATCH_SIZE = int(os.environ.get("PVM_BATCH_SIZE", "64"))
+BATCH_SIZE = int(os.environ.get("MODAL_EMBED_BATCH_SIZE", "64"))
 
 # ── Bulk job bookkeeping ──────────────────────────────────────────────────────
 # Job status docs are written here on the Volume so the (separate) web
@@ -102,18 +102,18 @@ GRAPH_JOBS_DIR = f"{VECTORS_DIR}/_graph_jobs"
 # Artifacts live under one fixed root; the worker resolves them by server-issued
 # artifact_id only (never a client-supplied path) and re-verifies sha256/bytes/kind.
 GRAPH_ARTIFACTS_DIR = f"{VECTORS_DIR}/_graph_artifacts"
-GRAPH_ARTIFACT_MAX_BYTES = int(os.environ.get("PVM_GRAPH_ARTIFACT_MAX_BYTES", str(64 * 1024 * 1024)))
+GRAPH_ARTIFACT_MAX_BYTES = int(os.environ.get("MODAL_EMBED_GRAPH_ARTIFACT_MAX_BYTES", str(64 * 1024 * 1024)))
 # Limits for graph upload/rebuild flows.
-GRAPH_UPLOAD_BATCH_MAX = int(os.environ.get("PVM_GRAPH_UPLOAD_BATCH_MAX", "256"))
-GRAPH_REBUILD_BATCH_SIZE = int(os.environ.get("PVM_GRAPH_REBUILD_BATCH_SIZE", "256"))
+GRAPH_UPLOAD_BATCH_MAX = int(os.environ.get("MODAL_EMBED_GRAPH_UPLOAD_BATCH_MAX", "256"))
+GRAPH_REBUILD_BATCH_SIZE = int(os.environ.get("MODAL_EMBED_GRAPH_REBUILD_BATCH_SIZE", "256"))
 
 # How many rows the worker applies between progress/status commits during a
 # rebuild phase. Amortizes Volume commits so a full rebuild is not one commit
 # per row/request.
-GRAPH_PROGRESS_COMMIT_INTERVAL = int(os.environ.get("PVM_GRAPH_PROGRESS_COMMIT_INTERVAL", "2000"))
+GRAPH_PROGRESS_COMMIT_INTERVAL = int(os.environ.get("MODAL_EMBED_GRAPH_PROGRESS_COMMIT_INTERVAL", "2000"))
 
 # Page size for the GET /jobs list endpoint.
-JOB_LIST_LIMIT = int(os.environ.get("PVM_JOB_LIST_LIMIT", "50"))
+JOB_LIST_LIMIT = int(os.environ.get("MODAL_EMBED_JOB_LIST_LIMIT", "50"))
 # ── Export / sync caps ────────────────────────────────────────────────────────
 # Hard ceiling on ``limit`` for /sync/export so a client can't request the
 # whole corpus in one page. The endpoint clamps to this.

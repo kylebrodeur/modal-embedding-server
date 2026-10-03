@@ -327,7 +327,7 @@ def get_spec(key: str, enabled_only: bool = True) -> EmbedderSpec:
 
 
 # ── Lazy, cached model loading (small LRU) ────────────────────────────────────
-_LRU_MAX = int(os.environ.get("PVM_MODEL_LRU", "3"))
+_LRU_MAX = int(os.environ.get("MODAL_EMBED_MODEL_LRU", "3"))
 _loaded: "OrderedDict[str, object]" = OrderedDict()
 _load_lock = threading.Lock()
 

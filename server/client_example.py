@@ -8,8 +8,8 @@ This mirrors what the TypeScript client (`src/modal-client.ts`) does, and is
 handy for smoke-testing a deployment from the command line.
 
 Usage (uv handles deps from the inline metadata above):
-    export PVM_MODAL_URL="https://<workspace>--pi-vault-mind-embed-embeddingservice-fastapi-app.modal.run"
-    export PVM_API_TOKEN="<the API_TOKEN you put in the pi-vault-mind-auth secret>"
+    export MODAL_EMBED_MODAL_URL="https://<workspace>--modal-embedding-service.modal.run"
+    export MODAL_EMBED_API_TOKEN="<the API_TOKEN you put in the embedding-auth secret>"
     uv run modal/client_example.py
 """
 
@@ -20,12 +20,12 @@ import time
 
 import requests
 
-BASE = os.environ["PVM_MODAL_URL"].rstrip("/")
-TOKEN = os.environ["PVM_API_TOKEN"]
+BASE = os.environ["MODAL_EMBED_MODAL_URL"].rstrip("/")
+TOKEN = os.environ["MODAL_EMBED_API_TOKEN"]
 HEADERS = {"Authorization": f"Bearer {TOKEN}"}
 # Override the model for the whole smoke (default: the canonical embeddinggemma).
 # Use a non-gated model (e.g. minilm-l6) to run end-to-end without an HF token.
-MODEL = os.environ.get("PVM_MODEL", "embeddinggemma")
+MODEL = os.environ.get("MODAL_EMBED_MODEL", "embeddinggemma")
 
 
 def embed(texts: list[str], task: str = "query", model: str = MODEL):

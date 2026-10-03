@@ -41,8 +41,8 @@ GENERATORS: dict[str, str] = {
     "llama3.1-8b": "meta-llama/Llama-3.1-8B-Instruct",  # gated
     "gemma3-12b": "google/gemma-3-12b-it",  # gated
 }
-DEFAULT_GENERATOR = os.environ.get("PVM_DATAGEN_DEFAULT", "qwen3-8b")
-DATAGEN_GPU = os.environ.get("PVM_DATAGEN_GPU", "A100-40GB")
+DEFAULT_GENERATOR = os.environ.get("MODAL_EMBED_DATAGEN_DEFAULT", "qwen3-8b")
+DATAGEN_GPU = os.environ.get("MODAL_EMBED_DATAGEN_GPU", "A100-40GB")
 
 DATASETS_DIR = f"{config.VECTORS_DIR}/_datasets"
 

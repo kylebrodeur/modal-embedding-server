@@ -1,0 +1,29 @@
+{"query": "What are ReturnVape's projected revenue streams and total revenue?", "relevant_id": "30-39 Business Development/core.md", "kind": "natural"}
+{"query": "What service revenue streams beyond raw materials are planned, and what is each worth?", "relevant_id": "30-39 Business Development/core.md", "kind": "natural"}
+{"query": "carbon credits EPR compliance data analytics co-collection revenue", "relevant_id": "30-39 Business Development/core.md", "kind": "keyword"}
+{"query": "How many vape devices per week and per year does the financial model assume at 25% US market share?", "relevant_id": "30-39 Business Development/break-even analysis.md", "kind": "natural"}
+{"query": "What are the per-unit recovery prices for battery materials, metal components, and circuit boards?", "relevant_id": "30-39 Business Development/break-even analysis.md", "kind": "natural"}
+{"query": "650,000 devices per week store commissions consumer credits operating costs", "relevant_id": "30-39 Business Development/break-even analysis.md", "kind": "keyword"}
+{"query": "How is annual profit allocated across business operations, CSR initiatives, and carbon offsets?", "relevant_id": "30-39 Business Development/CSR.md", "kind": "natural"}
+{"query": "60 25 15 profit split carbon environmental offsets community", "relevant_id": "30-39 Business Development/CSR.md", "kind": "keyword"}
+{"query": "Give the executive summary of the problem ReturnVape solves and its closed-loop solution.", "relevant_id": "30-39 Business Development/summary.md", "kind": "natural"}
+{"query": "closed-loop recycling funds community health programs executive summary", "relevant_id": "30-39 Business Development/summary.md", "kind": "keyword"}
+{"query": "Which industry sources should be used to validate vape device sales and market size numbers?", "relevant_id": "30-39 Business Development/key succcess points.md", "kind": "natural"}
+{"query": "What is the executive pitch deck for a strategic partnership with Apple?", "relevant_id": "30-39 Business Development/33 Strategic Partnerships/apple pitch.md", "kind": "natural"}
+{"query": "Describe the QuickCycle convenience-store collection program and which retail chains it targets.", "relevant_id": "30-39 Business Development/33 Strategic Partnerships/convience stores.md", "kind": "natural"}
+{"query": "7-Eleven fire-safe collection kiosk instant reward touchscreen", "relevant_id": "30-39 Business Development/33 Strategic Partnerships/convience stores.md", "kind": "keyword"}
+{"query": "How can lithium batteries and components recovered from vapes power a hydroponic growing system?", "relevant_id": "30-39 Business Development/32 Innovation/32.01 - Hydroponic System.md", "kind": "natural"}
+{"query": "What are the per-device costs for drop-box leasing, store commission, and insurance?", "relevant_id": "20-29 Research & Data/eco analysis.md", "kind": "natural"}
+{"query": "Which report and commodity price source are cited for lithium-ion battery composition and metal prices?", "relevant_id": "20-29 Research & Data/data backed calculations.md", "kind": "natural"}
+{"query": "Show the verified calculation that yields about $0.116 of recoverable material per device.", "relevant_id": "20-29 Research & Data/data backed calculations.md", "kind": "natural"}
+{"query": "DOE Critical Materials Report 2023 LME lithium cobalt nickel prices", "relevant_id": "20-29 Research & Data/data backed calculations.md", "kind": "keyword"}
+{"query": "What does the feasibility study say about competitors and how fragmented the vape-recycling market is?", "relevant_id": "20-29 Research & Data/feasability.md", "kind": "natural"}
+{"query": "US disposable vape market size annual waste tonnage CAGR growth", "relevant_id": "20-29 Research & Data/feasability.md", "kind": "keyword"}
+{"query": "Which FDA and CDC surveys are cited as core data references?", "relevant_id": "20-29 Research & Data/sources.md", "kind": "natural"}
+{"query": "NYTS NHIS FDA CDC source links e-cigarette use", "relevant_id": "20-29 Research & Data/sources.md", "kind": "keyword"}
+{"query": "What environmental and safety problems do current single-use disposable vapes create?", "relevant_id": "20-29 Research & Data/problems.md", "kind": "natural"}
+{"query": "What is the confidence rating and source for the weekly disposal volume and market value figures?", "relevant_id": "20-29 Research & Data/assumptions.md", "kind": "natural"}
+{"query": "data confidence matrix high medium Grand View Research FDA NYTS", "relevant_id": "20-29 Research & Data/assumptions.md", "kind": "keyword"}
+{"query": "What data is still missing or needs verification, such as manufacturer specs and collection rates?", "relevant_id": "20-29 Research & Data/critical gaps.md", "kind": "natural"}
+{"query": "What directory structure and knowledge-management system organizes the project's research files?", "relevant_id": "10-19 Project Management/km system.md", "kind": "natural"}
+{"query": "Where is the master index of ReturnVape artifacts and business-core documents?", "relevant_id": "10-19 Project Management/Index.md", "kind": "natural"}

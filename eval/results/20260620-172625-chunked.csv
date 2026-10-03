@@ -1,0 +1,2 @@
+name,provider,model,dim,recall@1,recall@5,recall@10,mrr@10,q_latency_ms,approx_cost_usd
+embeddinggemma,modal,embeddinggemma,768,0.6533,0.8889,0.9356,0.7524,6.7,0.0

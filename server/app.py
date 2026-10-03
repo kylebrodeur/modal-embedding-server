@@ -52,7 +52,7 @@ from web import build_app
 
 # Structured logging (one JSON object per line).
 logging.basicConfig(
-    level=os.environ.get("PVM_LOG_LEVEL", "INFO"),
+    level=os.environ.get("MODAL_EMBED_LOG_LEVEL", "INFO"),
     format='{"ts":"%(asctime)s","level":"%(levelname)s","msg":"%(message)s"}',
 )
 log = logging.getLogger("pvm.modal")
@@ -94,7 +94,7 @@ VOLUMES = {config.VECTORS_DIR: vectors_volume, config.CACHE_DIR: cache_volume}
 # PVM_ATTACH_SECRETS=0 — the Secret objects are then not created at all, so
 # Modal doesn't register them as code deps (which would otherwise mismatch
 # and crash-loop the container).
-_ATTACH_SECRETS = os.environ.get("PVM_ATTACH_SECRETS", "1") not in ("", "0", "false")
+_ATTACH_SECRETS = os.environ.get("MODAL_EMBED_ATTACH_SECRETS", "1") not in ("", "0", "false")
 auth_secret = modal.Secret.from_name(config.AUTH_SECRET_NAME) if _ATTACH_SECRETS else None
 hf_secret = modal.Secret.from_name(config.HF_SECRET_NAME) if _ATTACH_SECRETS else None
 
@@ -105,7 +105,12 @@ def _job_path(job_id: str) -> str:
 
 
 def _write_job(job_id: str, **fields) -> None:
-    os.makedirs(config.JOBS_DIR, exist_ok=True)
+    jobs_dir = Path(config.JOBS_DIR)
+    if not jobs_dir.exists():
+        try:
+            jobs_dir.mkdir(parents=True, exist_ok=True)
+        except PermissionError:
+            pass
     path = _job_path(job_id)
     doc: dict = {}
     if os.path.exists(path):
@@ -113,13 +118,20 @@ def _write_job(job_id: str, **fields) -> None:
             doc = json.load(fh)
     doc.update(fields)
     doc["updated_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
-    with open(path, "w") as fh:
+    tmp_path = str(jobs_dir / f"{job_id}.{uuid.uuid4().hex}.tmp")
+    with open(tmp_path, "w") as fh:
         json.dump(doc, fh)
+    os.replace(tmp_path, path)
     vectors_volume.commit()
 
+def _reload_volume_best_effort() -> None:
+    try:
+        vectors_volume.reload()
+    except RuntimeError:
+        pass
 
 def _read_job(job_id: str) -> dict | None:
-    vectors_volume.reload()
+    _reload_volume_best_effort()
     path = _job_path(job_id)
     if not os.path.exists(path):
         return None
@@ -128,19 +140,31 @@ def _read_job(job_id: str) -> dict | None:
 
 
 def _list_job_docs(limit: int) -> list[dict]:
-    vectors_volume.reload()
+    _reload_volume_best_effort()
     jobs_dir = Path(config.JOBS_DIR)
     if not jobs_dir.exists():
         return []
-    docs = []
-    for p in jobs_dir.glob("*.json"):
+
+    def _mtime(p: Path) -> float:
+        try:
+            return p.stat().st_mtime
+        except OSError:
+            return 0.0
+
+    # Sort paths by mtime (newest first) and parse only the top `limit`, so a
+    # large job history doesn't mean reading + JSON-parsing every file on each
+    # /jobs call. mtime tracks the last status write, matching `updated_at`.
+    paths = sorted(jobs_dir.glob("*.json"), key=_mtime, reverse=True)
+    docs: list[dict] = []
+    for p in paths:
+        if len(docs) >= limit:
+            break
         try:
             with open(p) as fh:
                 docs.append(json.load(fh))
         except (OSError, json.JSONDecodeError):
             continue
-    docs.sort(key=lambda d: d.get("updated_at", ""), reverse=True)
-    return docs[:limit]
+    return docs
 
 
 def _loaded_models() -> list[str]:
@@ -181,12 +205,11 @@ def _iter_reembed(source_collection: str, source_model: str, source_dim: int, ba
     if name not in _tables(db):
         raise ValueError(f"Re-embed source table '{name}' does not exist")
     tbl = db.open_table(name)
-    arrow_tbl = tbl.search().select(["id", "text", "metadata"]).to_arrow()
-    rows = arrow_tbl.to_pylist()
-    for i in range(0, len(rows), batch):
-        chunk = rows[i : i + batch]
+    # Stream the source namespace in batches instead of materializing the whole
+    # table — a large vault would otherwise load every row into memory at once.
+    for record_batch in tbl.search().select(["id", "text", "metadata"]).to_batches(batch):
         records = []
-        for r in chunk:
+        for r in record_batch.to_pylist():
             meta = r.get("metadata")
             if isinstance(meta, str):
                 try:
@@ -194,10 +217,12 @@ def _iter_reembed(source_collection: str, source_model: str, source_dim: int, ba
                 except json.JSONDecodeError:
                     meta = {}
             records.append({"id": r["id"], "text": r.get("text", ""), "metadata": meta})
-        yield records
+        if records:
+            yield records
 
 
-# Bulk worker
+# Bulk workers
+
 @app.function(
     gpu=config.GPU,
     volumes=VOLUMES,
@@ -331,7 +356,7 @@ class EmbeddingService:
         # backends are no-ops. Skip entirely with PVM_PREWARM=0.
         import threading
 
-        if os.environ.get("PVM_PREWARM", "1") in ("", "0", "false"):
+        if os.environ.get("MODAL_EMBED_PREWARM", "1") in ("", "0", "false"):
             log.info("pre-warm disabled by PVM_PREWARM")
             return
 
@@ -373,9 +398,6 @@ class EmbeddingService:
             get_spec_fn=get_spec,
             registry=enabled_registry(),
             read_job=_read_job,
-            write_job=_write_job_dict,
-            list_job_docs=_list_job_docs,
-            spawn_job=_spawn_job,
             loaded_models=_loaded_models,
             reload_fn=vectors_volume.reload,
         )
