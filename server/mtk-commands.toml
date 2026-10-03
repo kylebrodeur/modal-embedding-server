@@ -1,0 +1,18 @@
+# Operator commands for `mtk embedding`, mounted by the toolkit's command host
+# (modal-toolkit/toolkit/pkg_commands.py). Inert data: the server never reads it.
+# Kind "echo" prints guidance; "modal" runs `uv run modal <argv...>` in the checkout.
+
+[[command]]
+name = "sync"
+summary = "sync vectors down to the local LanceDB (client-side; guidance)"
+kind = "echo"
+requires = ["base_url", "token"]
+argv = [
+  "sync-down is a client-side action: see the modal-embedding-server README (Phase 4 of the flight path).",
+]
+
+[[command]]
+name = "reindex"
+summary = "rebuild the server-side vector index"
+kind = "modal"
+argv = ["run", "server/app.py"]
