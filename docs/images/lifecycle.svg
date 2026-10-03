@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="420" viewBox="0 0 980 420">
+<rect width="100%" height="100%" rx="12" fill="#0d1117"/>
+<defs><marker id="a" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6 Z" fill="#8b949e"/></marker></defs>
+<g font-family="Menlo,Consolas,monospace" font-size="14">
+<rect x="40"  y="60" width="180" height="64" rx="10" fill="#161b22" stroke="#30363d"/><text x="60"  y="88" fill="#e6edf3">research/datagen</text><text x="60" y="108" fill="#8b949e">synthetic queries</text>
+<rect x="40"  y="170" width="180" height="64" rx="10" fill="#161b22" stroke="#30363d"/><text x="60" y="198" fill="#e6edf3">eval/run_eval</text><text x="60" y="218" fill="#8b949e">recall@k, MRR</text>
+<rect x="290" y="170" width="200" height="64" rx="10" fill="#161b22" stroke="#2da44e"/><text x="310" y="198" fill="#e6edf3">embedding-server</text><text x="310" y="218" fill="#8b949e">/embed + bulk jobs</text>
+<rect x="560" y="170" width="200" height="64" rx="10" fill="#161b22" stroke="#2da44e"/><text x="580" y="198" fill="#e6edf3">sync protocol</text><text x="580" y="218" fill="#8b949e">watermark, incremental</text>
+<rect x="820" y="170" width="130" height="64" rx="10" fill="#161b22" stroke="#30363d"/><text x="840" y="198" fill="#e6edf3">local store</text><text x="840" y="218" fill="#8b949e">LanceDB</text>
+<rect x="290" y="300" width="200" height="64" rx="10" fill="#161b22" stroke="#30363d"/><text x="310" y="328" fill="#e6edf3">inference-server</text><text x="310" y="348" fill="#8b949e">hot set, scale-to-0</text>
+<rect x="560" y="300" width="200" height="64" rx="10" fill="#161b22" stroke="#30363d"/><text x="580" y="328" fill="#e6edf3">finetune-server</text><text x="580" y="348" fill="#8b949e">LoRA, eval gate</text>
+<rect x="560" y="60" width="200" height="64" rx="10" fill="#161b22" stroke="#30363d"/><text x="580" y="88" fill="#e6edf3">vision-server</text><text x="580" y="108" fill="#8b949e">bioclip, adaptive SAM</text>
+<rect x="290" y="380" width="470" height="34" rx="10" fill="#161b22" stroke="#1f6feb"/><text x="310" y="403" fill="#79c0ff">mtk: doctor | warm --all | shutdown --all | cost | flow</text>
+</g>
+<g stroke="#8b949e" stroke-width="1.5" fill="none" marker-end="url(#a)">
+<path d="M220 92 L400 92 L400 168"/>
+<path d="M220 202 L288 202"/>
+<path d="M490 202 L558 202"/>
+<path d="M760 202 L818 202"/>
+<path d="M390 236 L390 298"/>
+<path d="M660 236 L660 298"/>
+<path d="M760 352 L770 352 L770 380"/>
+</g>
+<g font-family="Menlo,Consolas,monospace" font-size="13" fill="#8b949e">
+<text x="240" y="150">picks the model</text>
+<text x="500" y="190">vectors</text>
+<text x="700" y="190">sync down</text>
+</g>
+</svg>
