@@ -10,7 +10,7 @@
 # It's kept only as a plain-pip fallback / dependency reference:
 #   uv pip install -r modal/requirements.txt   # (or: pip install -r …)
 modal>=0.64.0
-requests>=2.31.0
+requests>=2.34.2
 
 # --- baked into the Modal image (listed for reference) ---
 # sentence-transformers>=5.0.0
