@@ -9,6 +9,7 @@ reindex rebuilds from local JSONL cleanly. Canonical data is NOT here — it liv
 Run:  uvx modal run modal/cleanup.py
 """
 import modal
+
 import config
 
 image = (

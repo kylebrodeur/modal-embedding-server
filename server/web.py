@@ -21,7 +21,8 @@ module level.
 from __future__ import annotations
 
 import time
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 
 def build_app(
@@ -78,7 +79,17 @@ def build_app(
     from fastapi import Depends, FastAPI, Header, HTTPException
     from fastapi.responses import Response as RawResponse
 
-    from schemas import EmbedRequest, GraphArtifactUploadRequest, GraphChunkRequest, GraphImportRequest, GraphJobBatchRequest, GraphJobRequest, JobRequest, ReembedSource, V1EmbeddingRequest
+    from schemas import (
+        EmbedRequest,
+        GraphArtifactUploadRequest,
+        GraphChunkRequest,
+        GraphImportRequest,
+        GraphJobBatchRequest,
+        GraphJobRequest,
+        JobRequest,
+        ReembedSource,
+        V1EmbeddingRequest,
+    )
 
     # Route handlers are defined as closures below, so their `__globals__`
     # is *this module's* globals. FastAPI resolves body-model annotations via

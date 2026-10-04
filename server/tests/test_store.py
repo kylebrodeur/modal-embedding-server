@@ -6,8 +6,6 @@ installed (see modal/pyproject.toml [test] extras)."""
 
 from __future__ import annotations
 
-import json
-
 import pyarrow as pa
 import pytest
 
@@ -148,7 +146,7 @@ def test_max_seq():
 def test_export_arrow_returns_ipc_stream():
     store.upsert("main", "embeddinggemma", 768, [
         {"id": "1", "text": "a", "vector": _vec(768), "metadata": {"k": "v"}}])
-    payload, next_wm, done, count = store.export_since_arrow(
+    payload, _next_wm, done, count = store.export_since_arrow(
         "main", "embeddinggemma", 768, since=0, limit=500)
     assert count == 1
     assert done is True
@@ -161,7 +159,7 @@ def test_export_arrow_returns_ipc_stream():
 
 
 def test_export_arrow_empty_table_is_parseable():
-    payload, next_wm, done, count = store.export_since_arrow(
+    payload, _next_wm, done, count = store.export_since_arrow(
         "nope", "embeddinggemma", 768, since=0, limit=500)
     assert count == 0
     assert done is True

@@ -428,7 +428,7 @@ def _make_graph_client():
 
 
 def test_graph_artifact_upload_returns_server_issued_id():
-    client, staged = _make_graph_client()
+    client, _staged = _make_graph_client()
     rows = '{"id":"e1","name":"A"}\n'
     import hashlib
     sha = hashlib.sha256(rows.encode("utf-8")).hexdigest()

@@ -41,9 +41,9 @@ import json
 import os
 import threading
 from collections import OrderedDict
-from dataclasses import dataclass, field, replace
+from dataclasses import dataclass, replace
 from pathlib import Path
-from typing import IO, Any, Literal
+from typing import Any, Literal
 
 # Local import avoids a circular dependency at runtime (embedders ← config).
 import config
@@ -267,7 +267,7 @@ def build_registry(
             models = data.get("models", {}) if isinstance(data, dict) else {}
             for key, overrides in models.items():
                 if not isinstance(overrides, dict):
-                    raise ValueError(
+                    raise TypeError(
                         f"Registry entry '{key}' must be an object, got {type(overrides)}"
                     )
                 if key in registry:
@@ -328,7 +328,7 @@ def get_spec(key: str, enabled_only: bool = True) -> EmbedderSpec:
 
 # ── Lazy, cached model loading (small LRU) ────────────────────────────────────
 _LRU_MAX = int(os.environ.get("MODAL_EMBED_MODEL_LRU", "3"))
-_loaded: "OrderedDict[str, object]" = OrderedDict()
+_loaded: OrderedDict[str, object] = OrderedDict()
 _load_lock = threading.Lock()
 
 
@@ -431,7 +431,7 @@ def _embed_ollama(model: dict, formatted, out_dim):
         body = json.dumps({"model": name, "input": formatted}).encode()
         req = urllib.request.Request(f"{host}/api/embed", data=body,
                                      headers={"Content-Type": "application/json"})
-        with urllib.request.urlopen(req, timeout=120) as resp:  # noqa: S310 - controlled host
+        with urllib.request.urlopen(req, timeout=120) as resp:
             embeddings = json.loads(resp.read())["embeddings"]
         return _finish(embeddings)
     except urllib.error.HTTPError as exc:
@@ -449,7 +449,7 @@ def _embed_ollama(model: dict, formatted, out_dim):
         body = json.dumps({"model": name, "prompt": text}).encode()
         req = urllib.request.Request(f"{host}/api/embeddings", data=body,
                                      headers={"Content-Type": "application/json"})
-        with urllib.request.urlopen(req, timeout=120) as resp:  # noqa: S310 - controlled host
+        with urllib.request.urlopen(req, timeout=120) as resp:
             vec = json.loads(resp.read())["embedding"]
         vec = vec[:out_dim] if out_dim < len(vec) else vec
         out.append(_normalize(vec))
@@ -471,7 +471,7 @@ def _embed_openai_compatible(model: dict, formatted, out_dim):
     req = urllib.request.Request(
         f"{host}/v1/embeddings", data=body, headers=headers
     )
-    with urllib.request.urlopen(req, timeout=120) as resp:  # noqa: S310
+    with urllib.request.urlopen(req, timeout=120) as resp:
         data = json.loads(resp.read())
 
     out: list[list[float]] = []

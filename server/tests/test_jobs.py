@@ -14,7 +14,7 @@ import pytest
 
 pytest.importorskip("modal")
 
-import app  # noqa: E402 - import after importorskip
+import app
 
 
 def test_list_job_docs_orders_by_mtime_and_limits(tmp_path, monkeypatch):

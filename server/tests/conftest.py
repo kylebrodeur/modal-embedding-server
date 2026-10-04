@@ -5,7 +5,6 @@ inside the Modal image, and point the store at a per-test temp Volume dir.
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 

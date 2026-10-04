@@ -1,6 +1,8 @@
 """Diagnose the vectors Volume after a table-drop cleanup. Reports dir listing + LanceDB open error."""
 import os
+
 import modal
+
 import config
 
 image = (
@@ -15,8 +17,8 @@ VOLUMES = {config.VECTORS_DIR: vectors_volume}
 
 @app.function(volumes=VOLUMES)
 def diag() -> dict:
-    import os
     import traceback
+
     from store import _connect, _tables
     vectors_volume.reload()
     tree = []
@@ -33,7 +35,7 @@ def diag() -> dict:
         db = _connect()
         out["tables"] = _tables(db)
         out["connect_ok"] = True
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - diag must not crash
         out["connect_ok"] = False
         out["connect_error"] = f"{type(e).__name__}: {e}"
         out["tb"] = traceback.format_exc().splitlines()[-6:]
@@ -42,7 +44,7 @@ def diag() -> dict:
         from store import stats
         out["stats_ok"] = True
         out["stats"] = stats()
-    except Exception as e:
+    except Exception as e:  # noqa: BLE001 - diag must not crash
         out["stats_ok"] = False
         out["stats_error"] = f"{type(e).__name__}: {e}"
         out["stats_tb"] = traceback.format_exc().splitlines()[-8:]

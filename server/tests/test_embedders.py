@@ -7,7 +7,7 @@ import json
 
 import pytest
 
-from embedders import EmbedderSpec, build_registry, _BUILTIN
+from embedders import _BUILTIN, EmbedderSpec, build_registry
 
 
 # resolve_dim

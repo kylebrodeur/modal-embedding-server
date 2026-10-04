@@ -29,8 +29,8 @@ is for adds/updates only.
 from __future__ import annotations
 
 import io
-import re
 import json
+import re
 import threading
 import time
 
@@ -38,7 +38,6 @@ import lancedb
 import pyarrow as pa
 
 import config
-
 
 # Strictly-monotonic seq (epoch microseconds that never repeat within a
 # process). Two rows in the same upsert batch must not share a seq, or one can
@@ -148,13 +147,13 @@ def _ensure_indexes(tbl, dim: int) -> None:
                     num_partitions=max(8, rows // 256),
                     name="vector_idx",
                 )
-            except Exception:  # noqa: BLE001 - index exists / too few rows
+            except Exception:  # noqa: BLE001, S110 - index exists or too few rows, safe no-op
                 pass
 
     if config.FTS_ENABLED and "text_fts" not in names:
         try:
             tbl.create_fts_index("text", name="text_fts")
-        except Exception:  # noqa: BLE001 - FTS unavailable / exists
+        except Exception:  # noqa: BLE001, S110 - FTS unavailable / exists
             pass
 
 

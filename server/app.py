@@ -198,7 +198,7 @@ def _iter_reembed(source_collection: str, source_model: str, source_dim: int, ba
     import lancedb
     import pyarrow as pa  # noqa: F401 - lancedb needs pyarrow at runtime
 
-    from store import VECTORS_DIR, table_name, _tables
+    from store import VECTORS_DIR, _tables, table_name
 
     db = lancedb.connect(VECTORS_DIR())
     name = table_name(source_collection, source_model, source_dim)
@@ -331,7 +331,7 @@ def embed_batch(job_id: str, collection: str, model: str, dim: int | None, req: 
             finished_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         )
         return {"job_id": job_id, "status": "done", "processed": processed}
-    except Exception as exc:  # noqa: BLE001 - surface any failure to the client
+    except Exception as exc:
         log.exception("job %s failed", job_id)
         _write_job(job_id, status="error", error=str(exc))
         raise
