@@ -77,5 +77,21 @@ The server is fully configurable via environment variables (prefixed with `MODAL
 - `MODAL_EMBED_GPU`: Set to `""` for CPU, or specify a GPU type (e.g., `L4`).
 - `MODAL_EMBED_VECTORS_VOLUME_VERSION`: Must be `2` for LanceDB stability.
 
+## Part of the Modal Ecosystem
+
+This repo is one of three standalone Modal utilities from the same author. Each is extractable and deployable on its own.
+
+- **[modal-inference-server](https://github.com/kylebrodeur/modal-inference-server):** OpenAI-compatible LLM inference with hot-set routing and scale-to-zero.
+- **[modal-vision-server](https://github.com/kylebrodeur/modal-vision-server):** Specialized vision classification (BioCLIP-2) with adaptive SAM 2.1 segmentation.
+
+## Examples
+
+See [`examples/`](examples/) for a minimal, stdlib-only client (`embed_example.py`) you can copy directly into your own stack.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for ground rules and workflow.
+
 ## License
-Apache-2.0
+
+Apache-2.0 — see [LICENSE](LICENSE).
