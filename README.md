@@ -5,8 +5,6 @@
 ![Modal](https://img.shields.io/badge/Deploy%20to-Modal-green.svg)
 [![Sponsor](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-pink.svg)](https://github.com/sponsors/kylebrodeur)
 
-
-
 A comprehensive GPU-accelerated stack for embedding large-scale corpora, evaluating model performance, and syncing vectors to local clients.
 
 This repository is organized into three specialized pillars to move you from "guessing" to "deployed."
@@ -77,13 +75,6 @@ The server is fully configurable via environment variables (prefixed with `MODAL
 - `MODAL_EMBED_GPU`: Set to `""` for CPU, or specify a GPU type (e.g., `L4`).
 - `MODAL_EMBED_VECTORS_VOLUME_VERSION`: Must be `2` for LanceDB stability.
 
-## Part of the Modal Ecosystem
-
-This repo is one of three standalone Modal utilities from the same author. Each is extractable and deployable on its own.
-
-- **[modal-inference-server](https://github.com/kylebrodeur/modal-inference-server):** OpenAI-compatible LLM inference with hot-set routing and scale-to-zero.
-- **[modal-vision-server](https://github.com/kylebrodeur/modal-vision-server):** Specialized vision classification (BioCLIP-2) with adaptive SAM 2.1 segmentation.
-
 ## Examples
 
 See [`examples/`](examples/) for a minimal, stdlib-only client (`embed_example.py`) you can copy directly into your own stack.
@@ -97,6 +88,33 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for ground rules and workflow.
 ---
 
 Built by [Kyle Brodeur](https://kylebrodeur.com) · Model-selection deep-dive: [Choose the Right Embedding Model for Your Data](https://kylebrodeur.substack.com/p/choose-embedding-model-for-your-data)
+
+## Part of the Modal Toolkit
+
+Four standalone Modal utilities from the same author, each extractable and deployable on its own.
+
+- **[modal-inference-server](https://github.com/kylebrodeur/modal-inference-server):** OpenAI-compatible LLM inference with hot-set routing and scale-to-zero.
+- **[modal-vision-server](https://github.com/kylebrodeur/modal-vision-server):** Specialized vision classification (BioCLIP-2) with adaptive SAM 2.1 segmentation.
+- **[modal-finetune-server](https://github.com/kylebrodeur/modal-finetune-server):** Profile-driven LoRA fine-tune and GGUF pipeline with an honest eval gate.
+
+## Ecosystem Flowchart
+
+```mermaid
+graph LR
+    subgraph Your Data
+        Local[Local Vault / Corpus]
+    end
+    subgraph Modal GPU Stack
+        Embed[modal-embedding-server]
+        Infer[modal-inference-server]
+        Vision[modal-vision-server]
+        Finetune[modal-finetune-server]
+    end
+    Local -- text / images / prompts --> Embed & Infer & Vision
+    Embed -- vectors --> Infer
+    Finetune -- adapters --> Infer
+    Embed -- synced vectors --> Local
+```
 
 ## License
 
