@@ -8,9 +8,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: server
     steps:
       - uses: actions/checkout@v4
       - name: Install uv
@@ -18,8 +15,8 @@ jobs:
         with:
           version: "latest"
       - name: Sync dependencies
-        run: uv sync --group dev
+        run: uv sync --project server --group dev
       - name: Run tests
-        run: uv run pytest tests -q
+        run: uv run --project server pytest server/tests -q
       - name: Run lint
-        run: uv run ruff check .
+        run: uv run --project server ruff check server eval
