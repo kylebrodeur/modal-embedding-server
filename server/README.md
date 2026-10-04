@@ -1,7 +1,7 @@
-# pi-vault-mind — Modal embedding app
+# modal-embedding-server
 
-A [Modal](https://modal.com) app that does the heavy embedding work for
-pi-vault-mind: **bulk background jobs**, **low-latency on-demand embedding**,
+A [Modal](https://modal.com) app that does the heavy embedding work for a
+local vault: **bulk background jobs**, **low-latency on-demand embedding**,
 and a **Volume-backed LanceDB vector store** that syncs down to the local
 `.lancedb`.
 
@@ -43,7 +43,7 @@ not locally — locally you only need the `modal` CLI.
 uvx modal token new        # one-time auth  (or: uv tool install modal && modal token new)
 
 # 1. API token that gates the web endpoints
-uvx modal secret create pi-vault-mind-auth API_TOKEN=$(openssl rand -hex 32)
+uvx modal secret create embedding-auth API_TOKEN=$(openssl rand -hex 32)
 
 # 2. HuggingFace token (EmbeddingGemma is a gated repo — accept its license
 #    on huggingface.co first, then create a read token)
@@ -56,7 +56,7 @@ Create the two secrets first (EmbeddingGemma is a gated HF repo — accept
 its license on huggingface.co, then create a read token):
 
 ```bash
-uvx modal secret create pi-vault-mind-auth API_TOKEN=$(openssl rand -hex 32)
+uvx modal secret create embedding-auth API_TOKEN=$(openssl rand -hex 32)
 uvx modal secret create huggingface-secret HF_TOKEN=hf_xxx
 ```
 
@@ -69,27 +69,27 @@ uvx modal deploy modal/app.py
 > **The vectors Volume must be v2.** LanceDB's commit uses hardlink/rename,
 > which Modal Volume **v1** does not support (`linkat` → `Operation not
 > permitted`, crashing every bulk upsert). The app creates the vectors
-> Volume as v2 by default (`PVM_VECTORS_VOLUME_VERSION=2`). If you have an
+> Volume as v2 by default (`MODAL_EMBED_VECTORS_VOLUME_VERSION=2`). If you have an
 > existing v1 vectors Volume, delete it first (`uvx modal volume delete
 > <name> -y`) so the deploy recreates it as v2. See
 > [lance-format/lance#5775](https://github.com/lance-format/lance/issues/5775).
 
 Modal prints the web URL, e.g.
-`https://<workspace>--pi-vault-mind-embed-embeddingservice-fastapi-app.modal.run`.
+`https://<workspace>--modal-embedding-server.modal.run`.
 
 First-time deploy before the secrets exist? Stand the infra up, then add
 the secrets and redeploy:
 
 ```bash
-PVM_ATTACH_SECRETS=0 PVM_PREWARM=0 uvx modal deploy modal/app.py   # infra only
+MODAL_EMBED_ATTACH_SECRETS=0 MODAL_EMBED_PREWARM=0 uvx modal deploy modal/app.py   # infra only
 # (service fail-closes: protected routes 503 until the auth secret is added)
 ```
 
-`PVM_PREWARM=0` skips the start-time model pre-warm (it runs in a background
+`MODAL_EMBED_PREWARM=0` skips the start-time model pre-warm (it runs in a background
 thread by default, so it never blocks readiness); set it back to `1` (the
 default) once a valid `HF_TOKEN` is in place so the first `/embed` is fast.
 
-**Verified live (kylebrodeur workspace):** `/health`, `/models`, `/stats`,
+**Verified live against a real deployment:** `/health`, `/models`, `/stats`,
 `/sync/collections`, `POST /jobs` (queued → running → error), `GET /jobs`
 (list), and 401-without-auth all work against the deployment. The only
 remaining step is a human one: replace the `huggingface-secret` placeholder
@@ -105,8 +105,8 @@ uvx modal run modal/app.py
 ## Use
 
 ```bash
-export PVM_MODAL_URL="https://…modal.run"
-export PVM_API_TOKEN="…"   # matches the pi-vault-mind-auth secret
+export MODAL_EMBED_MODAL_URL="https://…modal.run"
+export MODAL_EMBED_API_TOKEN="…"   # matches the embedding-auth secret
 uv run modal/client_example.py   # deps come from the script's PEP 723 metadata
 ```
 
@@ -141,18 +141,18 @@ Full contract in [`docs/MODAL_EMBEDDING.md`](../docs/MODAL_EMBEDDING.md).
 
 ## Configuration
 
-Everything is env-overridable (`PVM_*`); see `modal/config.py`. Highlights:
+Everything is env-overridable (`MODAL_EMBED_*`); see `modal/config.py`. Highlights:
 
-- `PVM_DEFAULT_MODEL` / `PVM_DEFAULT_DIM` — canonical model + output dim.
-- `PVM_ENABLED_MODELS` — comma allow-list; unset = all registered models.
-- `PVM_REGISTRY_FILE` — JSON registry merged over the built-in defaults, so
+- `MODAL_EMBED_DEFAULT_MODEL` / `MODAL_EMBED_DEFAULT_DIM` — canonical model + output dim.
+- `MODAL_EMBED_ENABLED_MODELS` — comma allow-list; unset = all registered models.
+- `MODAL_EMBED_REGISTRY_FILE` — JSON registry merged over the built-in defaults, so
   a new embedder is config-only (no code change):
   `{"models": {"custom-bge": {"hf_id": "BAAI/bge-large-en-v1.5", "native_dim": 1024}}}`.
-- `PVM_GPU` — `L4` (default) / `A10G` / `` (CPU, for Ollama/HF-proxy mode).
-- `PVM_OLLAMA_HOST` / `PVM_HF_INFERENCE_BASE_URL` — non-GPU backends.
-- `PVM_BATCH_SIZE`, `PVM_MAX_CONCURRENT`, `PVM_SCALEDOWN_WINDOW`.
-- `PVM_VECTOR_INDEX` / `PVM_FTS` / `PVM_VECTOR_INDEX_TRAIN_THRESHOLD` — index
-  policy; `PVM_EXPORT_LIMIT_MAX` caps sync page size.
+- `MODAL_EMBED_GPU` — `L4` (default) / `A10G` / `` (CPU, for Ollama/HF-proxy mode).
+- `MODAL_EMBED_OLLAMA_HOST` / `MODAL_EMBED_HF_INFERENCE_BASE_URL` — non-GPU backends.
+- `MODAL_EMBED_BATCH_SIZE`, `MODAL_EMBED_MAX_CONCURRENT`, `MODAL_EMBED_SCALEDOWN_WINDOW`.
+- `MODAL_EMBED_VECTOR_INDEX` / `MODAL_EMBED_FTS` / `MODAL_EMBED_VECTOR_INDEX_TRAIN_THRESHOLD` — index
+  policy; `MODAL_EMBED_EXPORT_LIMIT_MAX` caps sync page size.
 
 Each `EmbedderSpec` carries a `backend` (`sentence-transformers` | `ollama`
 | `hf`); GPU is optional — when the canonical model is served via Ollama or
@@ -167,7 +167,7 @@ heavy ML stack (torch, sentence-transformers) is NOT a test dep; only
 ```bash
 cd modal
 # Keep the venv out of the repo so the repo-wide biome hook doesn't lint it.
-UV_PROJECT_ENVIRONMENT=/tmp/pvm-modal-venv uv run --extra test pytest tests
+UV_PROJECT_ENVIRONMENT=/tmp/modal-embedding-venv uv run --extra test pytest tests
 ```
 
 Covers: `EmbedderSpec.resolve_dim` + prompt formatting + registry
@@ -186,10 +186,10 @@ aren't an artifact of one generator's phrasing.
 ```bash
 # corpus can be a JSONL ({id, fact|text}) OR an Obsidian/markdown vault dir
 uvx modal run modal/datagen.py \
-  --corpus /path/to/recycvape/ReturnVape \
+  --corpus /path/to/your-vault \
   --models qwen3-8b,mistral-7b \
   --n-per-doc 5 \
-  --out datasets/recycvape-generated.jsonl
+  --out datasets/generated-queries.jsonl
 ```
 
 Writes the dataset both locally (`--out`) and to the Volume under `_datasets/`.
@@ -197,7 +197,7 @@ Generator models live in the `GENERATORS` registry in `datagen.py` — **verify
 the HuggingFace ids and accept any gated licenses** for your account before a
 run. Governance: generation uses **open-weight** models on **our own Modal
 inference** only (D7/D10) — no third-party SaaS LLM. Default GPU is
-`A100-40GB` (override with `PVM_DATAGEN_GPU`); 7–8B models fit comfortably.
+`A100-40GB` (override with `MODAL_EMBED_DATAGEN_GPU`); 7–8B models fit comfortably.
 
 For a hand-written, variance-free benchmark instead, see
 [`eval/datasets/`](../eval/datasets/).
@@ -205,6 +205,6 @@ For a hand-written, variance-free benchmark instead, see
 ## Cost notes
 
 EmbeddingGemma-300m is small; an `L4` (the default) handles it comfortably and
-scales to zero after `PVM_SCALEDOWN_WINDOW` seconds idle. Set `PVM_GPU=""` to
+scales to zero after `MODAL_EMBED_SCALEDOWN_WINDOW` seconds idle. Set `MODAL_EMBED_GPU=""` to
 run on CPU for very light use. Uncomment `min_containers=1` in `app.py` to keep
 one container warm and eliminate cold starts (at the cost of idle spend).

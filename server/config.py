@@ -1,11 +1,11 @@
-"""Central configuration for the pi-vault-mind Modal embedding app.
+"""Central configuration for the modal-embedding-server Modal app.
 
 Everything that the bulk worker, the on-demand service, and the sync
 endpoint need to agree on lives here so there is a single source of truth
 for names, paths, and defaults.
 
 Override any value at deploy time with an environment variable of the same
-name (e.g. ``PVM_GPU=A10G uvx modal deploy modal/app.py``).
+name (e.g. ``MODAL_EMBED_GPU=A10G uvx modal deploy modal/app.py``).
 
 Configurability contract
 -------------------------
@@ -47,14 +47,14 @@ CACHE_DIR = "/cache"
 
 # ── Secrets ───────────────────────────────────────────────────────────────────
 # Create with:
-#   modal secret create pi-vault-mind-auth API_TOKEN=$(openssl rand -hex 32)
+#   modal secret create embedding-auth API_TOKEN=$(openssl rand -hex 32)
 #   modal secret create huggingface-secret HF_TOKEN=hf_xxx
 AUTH_SECRET_NAME = os.environ.get("MODAL_EMBED_AUTH_SECRET", "embedding-auth")
 HF_SECRET_NAME = os.environ.get("MODAL_EMBED_HF_SECRET", "huggingface-secret")
 
 # ── Compute ───────────────────────────────────────────────────────────────────
 # GPU is OPTIONAL and config-driven. EmbeddingGemma-300m is small; an L4 is
-# plenty and cheap. Set PVM_GPU="" (empty) to run on CPU — the service then does
+# plenty and cheap. Set MODAL_EMBED_GPU="" (empty) to run on CPU — the service then does
 # no GPU work and is free to proxy embedders served via Ollama / HF Inference
 # (backends that own their own compute). Keep the GPU/SentenceTransformer path
 # for self-hosting open-weight models on Modal.
@@ -117,29 +117,29 @@ JOB_LIST_LIMIT = int(os.environ.get("MODAL_EMBED_JOB_LIST_LIMIT", "50"))
 # ── Export / sync caps ────────────────────────────────────────────────────────
 # Hard ceiling on ``limit`` for /sync/export so a client can't request the
 # whole corpus in one page. The endpoint clamps to this.
-EXPORT_LIMIT_MAX = int(os.environ.get("PVM_EXPORT_LIMIT_MAX", "5000"))
-EXPORT_LIMIT_DEFAULT = int(os.environ.get("PVM_EXPORT_LIMIT_DEFAULT", "500"))
+EXPORT_LIMIT_MAX = int(os.environ.get("MODAL_EMBED_EXPORT_LIMIT_MAX", "5000"))
+EXPORT_LIMIT_DEFAULT = int(os.environ.get("MODAL_EMBED_EXPORT_LIMIT_DEFAULT", "500"))
 
 # ── Vector store options ──────────────────────────────────────────────────────
-# Build a vector index (IVF_PQ) on newly created tables. Set PVM_VECTOR_INDEX=""
+# Build a vector index (IVF_PQ) on newly created tables. Set MODAL_EMBED_VECTOR_INDEX=""
 # to skip (small datasets / test runs where exact search is fine).
 # Default OFF (2026-08-22): IVF_PQ creation on a Modal Volume leaves an open
 # index.idx file that blocks later volume.reload(), breaking job poll + sync.
 # Exact (brute-force) search is fine for this vault's size.
-VECTOR_INDEX_ENABLED = os.environ.get("PVM_VECTOR_INDEX", "0") not in ("", "0", "false")
+VECTOR_INDEX_ENABLED = os.environ.get("MODAL_EMBED_VECTOR_INDEX", "0") not in ("", "0", "false")
 
 # How many rows a table needs before an IVF_PQ index is created. Below this,
 # exact (brute-force) search is fine and avoids training a tiny index.
-VECTOR_INDEX_TRAIN_THRESHOLD = int(os.environ.get("PVM_VECTOR_INDEX_TRAIN_THRESHOLD", "256"))
+VECTOR_INDEX_TRAIN_THRESHOLD = int(os.environ.get("MODAL_EMBED_VECTOR_INDEX_TRAIN_THRESHOLD", "256"))
 
 # Build a full-text-search (TFTS) index on the ``text`` column. Useful for
-# hybrid search; set PVM_FTS="" to skip.
-FTS_ENABLED = os.environ.get("PVM_FTS", "1") not in ("", "0", "false")
+# hybrid search; set MODAL_EMBED_FTS="" to skip.
+FTS_ENABLED = os.environ.get("MODAL_EMBED_FTS", "1") not in ("", "0", "false")
 
 # Compact tables after a bulk job if fragmentation exceeds this fraction of
 # live rows. ``0`` disables auto-compaction.
 COMPACTION_FRAGMENTATION_THRESHOLD = float(
-    os.environ.get("PVM_COMPACTION_THRESHOLD", "0.5")
+    os.environ.get("MODAL_EMBED_COMPACTION_THRESHOLD", "0.5")
 )
 
 # ── Model registry file ──────────────────────────────────────────────────────
@@ -152,18 +152,18 @@ COMPACTION_FRAGMENTATION_THRESHOLD = float(
 #       "custom-bge": { "hf_id": "BAAI/bge-large-en-v1.5", "native_dim": 1024,
 #                       "backend": "sentence-transformers" } } }
 #
-# Set PVM_REGISTRY_FILE to a path present in the image / Volume.
-REGISTRY_FILE = os.environ.get("PVM_REGISTRY_FILE", "")
+# Set MODAL_EMBED_REGISTRY_FILE to a path present in the image / Volume.
+REGISTRY_FILE = os.environ.get("MODAL_EMBED_REGISTRY_FILE", "")
 
 # ── Backends ──────────────────────────────────────────────────────────────────
 # Ollama proxy backend: base URL of an Ollama host reachable from the container
 # (Ollama Cloud or a tunnel). When a model's ``backend`` is "ollama", embed
 # calls go here instead of loading a SentenceTransformer. Empty = unused.
-OLLAMA_HOST = os.environ.get("PVM_OLLAMA_HOST", "http://localhost:11434")
+OLLAMA_HOST = os.environ.get("MODAL_EMBED_OLLAMA_HOST", "http://localhost:11434")
 
 # HF Inference backend: when a model's ``backend`` is "hf", embeddings are
 # fetched from the HF Inference API (serverless or a dedicated endpoint).
 # ``hf_inference_endpoint`` on a model spec overrides this per-model.
 HF_INFERENCE_BASE_URL = os.environ.get(
-    "PVM_HF_INFERENCE_BASE_URL", "https://api-inference.huggingface.co"
+    "MODAL_EMBED_HF_INFERENCE_BASE_URL", "https://api-inference.huggingface.co"
 )

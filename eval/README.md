@@ -58,7 +58,7 @@ that embedder is skipped):
 export OLLAMA_HOST=http://127.0.0.1:11434      # only if not the default / for Cloud
 export OLLAMA_API_KEY=…                         # only for Ollama Cloud
 export HF_TOKEN=…                               # only for HF Inference embedders
-export PVM_MODAL_URL=… PVM_API_TOKEN=…          # only for the Modal service
+export MODAL_EMBED_MODAL_URL=… MODAL_EMBED_API_TOKEN=…          # only for the Modal service
 ```
 
 Results print to the terminal and are written to `eval/results/<timestamp>.{md,csv}`.
@@ -84,19 +84,19 @@ local Ollama. This is useful for:
    uvx modal deploy modal/app.py
    ```
    The deploy prints the web URL, e.g.
-   `https://<workspace>--pi-vault-mind-embed-embeddingservice-fastapi-app.modal.run`.
+   `https://<workspace>--modal-embedding-server.modal.run`.
 
 2. **Set the auth token** — generate one and store it in the Modal secret:
    ```bash
    TOKEN=$(openssl rand -hex 32)
-   uvx modal secret create pi-vault-mind-auth API_TOKEN=$TOKEN --force
+   uvx modal secret create embedding-auth API_TOKEN=$TOKEN --force
    uvx modal deploy modal/app.py   # redeploy so containers pick up the new token
    ```
 
 3. **Export env vars** before running the eval:
    ```bash
-   export PVM_MODAL_URL="https://<workspace>--pi-vault-mind-embed-embeddingservice-fastapi-app.modal.run"
-   export PVM_API_TOKEN="$TOKEN"
+   export MODAL_EMBED_MODAL_URL="https://<workspace>--modal-embedding-server.modal.run"
+   export MODAL_EMBED_API_TOKEN="$TOKEN"
    ```
 
 #### Config — Modal embedder entry
@@ -149,8 +149,8 @@ wall time further, at higher GPU cost.
 
 ```bash
 # Use a config with only embeddinggemma via Modal (see example above)
-export PVM_MODAL_URL="https://<workspace>--pi-vault-mind-embed-embeddingservice-fastapi-app.modal.run"
-export PVM_API_TOKEN="<your token>"
+export MODAL_EMBED_MODAL_URL="https://<workspace>--modal-embedding-server.modal.run"
+export MODAL_EMBED_API_TOKEN="<your token>"
 
 # Pass 1 — whole-note
 uv run eval/run_eval.py --config eval/config.json --chunk off \

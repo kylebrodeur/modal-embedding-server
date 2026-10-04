@@ -1,10 +1,10 @@
-"""Drop all stale tables on the pi-vault-mind vectors Volume.
+"""Drop all stale tables on the vectors Volume.
 
-The remote reindex hit a LanceDB lock ("open files preventing the operation") on
-col_personal_publishing_plan_main__embeddinggemma__768, which held an open vector index. The server
-Volume also carries stale e2e-* test tables. This drops all tables on the Volume so the next
-reindex rebuilds from local JSONL cleanly. Canonical data is NOT here — it lives in the local
-.vault-mind/collections/*.jsonl.
+A remote reindex can hit a LanceDB lock ("open files preventing the operation")
+when a table holds an open vector index. The server Volume can also carry stale
+e2e-* test tables. This drops all tables on the Volume so the next reindex
+rebuilds from local JSONL cleanly. Canonical data is NOT here — it lives in
+local JSONL collections.
 
 Run:  uvx modal run modal/cleanup.py
 """
@@ -18,7 +18,7 @@ image = (
     .add_local_python_source("config", "embedders", "store", "web", "schemas")
 )
 
-app = modal.App("pi-vault-mind-cleanup", image=image)
+app = modal.App(f"{config.APP_NAME}-cleanup", image=image)
 vectors_volume = modal.Volume.from_name(config.VECTORS_VOLUME_NAME, create_if_missing=True)
 VOLUMES = {config.VECTORS_DIR: vectors_volume}
 

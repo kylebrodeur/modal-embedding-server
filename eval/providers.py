@@ -17,7 +17,7 @@ Every provider exposes the same call:
 
     OLLAMA_HOST (default http://127.0.0.1:11434), OLLAMA_API_KEY (Ollama Cloud)
     HF_TOKEN
-    PVM_MODAL_URL, PVM_API_TOKEN   (our Modal service)
+    MODAL_EMBED_MODAL_URL, MODAL_EMBED_API_TOKEN   (our Modal service)
 
 Only `requests` + `numpy` are required; no vendor SDKs.
 """
@@ -151,8 +151,8 @@ def _modal_single_batch(
 
 
 def _modal(model: str, texts: list[str], task: str, cfg: dict) -> list[list[float]]:
-    base = (cfg.get("host") or os.environ["PVM_MODAL_URL"]).rstrip("/")
-    token = os.environ["PVM_API_TOKEN"]
+    base = (cfg.get("host") or os.environ["MODAL_EMBED_MODAL_URL"]).rstrip("/")
+    token = os.environ["MODAL_EMBED_API_TOKEN"]
     bs = cfg.get("batch_size", 256)
     timeout = cfg.get("timeout", 300)
     dim = cfg.get("dim")

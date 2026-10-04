@@ -14,7 +14,6 @@
 {"query": "LinkedIn profile optimization based on algorithm data", "relevant_id": "20 - Areas/20.13 - Tech Writing/21-21-26-Optimize_LinkedIn_Profile_Strategy.md", "kind": "keyword"}
 {"query": "Ways to align my professional identity with the categories LinkedIn assigns to me", "relevant_id": "20 - Areas/20.13 - Tech Writing/21-21-26-Optimize_LinkedIn_Profile_Strategy.md", "kind": "keyword"}
 {"query": "How do I better integrate Excalidraw into my Obsidian setup?", "relevant_id": "00 - System/00.04 - Journal/_reviewed/2025-01-30.md", "kind": "natural"}
-{"query": "McGaw site audit crawl errors", "relevant_id": "00 - System/00.04 - Journal/_reviewed/2025-01-30.md", "kind": "keyword"}
 {"query": "Apache redirect HTTPS proxy config", "relevant_id": "00 - System/00.04 - Journal/_reviewed/2025-01-30.md", "kind": "keyword"}
 {"query": "How to get into Shopify Collabs and Collective based on sales volume", "relevant_id": "20 - Areas/20.05 - MissMiss-MetsaChroma/Shopify.md", "kind": "natural"}
 {"query": "Shopify AI Sidekick and Shop Cash setup", "relevant_id": "20 - Areas/20.05 - MissMiss-MetsaChroma/Shopify.md", "kind": "keyword"}
@@ -25,12 +24,6 @@
 {"query": "How to reduce API costs when deploying large language models", "relevant_id": "20 - Areas/Courses/Learn Python, ML, AI, and Write Better/Few Lessons from Deploying and Using LLMs in Production Deploying LLMs.md", "kind": "natural"}
 {"query": "Sid Sriram tips on preventing hallucinations in production AI", "relevant_id": "20 - Areas/Courses/Learn Python, ML, AI, and Write Better/Few Lessons from Deploying and Using LLMs in Production Deploying LLMs.md", "kind": "keyword"}
 {"query": "Strategies for using small classifiers to filter LLM requests", "relevant_id": "20 - Areas/Courses/Learn Python, ML, AI, and Write Better/Few Lessons from Deploying and Using LLMs in Production Deploying LLMs.md", "kind": "keyword"}
-{"query": "How to improve a freelance statement of work for the U of Digital project", "relevant_id": "20 - Areas/20.14 - U of Digital/_uofd-archive/Claude-Freelance Consultant's Statement of Work.md", "kind": "natural"}
-{"query": "Consultant advice for the Google Privacy Sandbox course CX draft", "relevant_id": "20 - Areas/20.14 - U of Digital/_uofd-archive/Claude-Freelance Consultant's Statement of Work.md", "kind": "keyword"}
-{"query": "guidance on structuring SOW for one person freelancer project", "relevant_id": "20 - Areas/20.14 - U of Digital/_uofd-archive/Claude-Freelance Consultant's Statement of Work.md", "kind": "keyword"}
-{"query": "How to trigger the onboarding flow using the UTM.io registration timestamp?", "relevant_id": "20 - Areas/20.12 - UTM.io-McGaw/100224 - UTMio - HubSpot - Review.md", "kind": "natural"}
-{"query": "HubSpot email preference center and one-click unsubscribe checklist", "relevant_id": "20 - Areas/20.12 - UTM.io-McGaw/100224 - UTMio - HubSpot - Review.md", "kind": "keyword"}
-{"query": "Lawrence handoff for Ortto and SFDC cleanup project", "relevant_id": "20 - Areas/20.12 - UTM.io-McGaw/100224 - UTMio - HubSpot - Review.md", "kind": "keyword"}
 {"query": "Kahneman audiobook link", "relevant_id": "40 - Archive/Thinking_Fast_and_Slow.md", "kind": "keyword"}
 {"query": "Where is the audio version of Thinking Fast and Slow?", "relevant_id": "40 - Archive/Thinking_Fast_and_Slow.md", "kind": "natural"}
 {"query": "Dual process theory book audio source", "relevant_id": "40 - Archive/Thinking_Fast_and_Slow.md", "kind": "keyword"}
@@ -43,12 +36,6 @@
 {"query": "How do I get rid of thrips using a comprehensive step-by-step strategy?", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Pest Control/20-17-7-Thrips_Removal_Lasagna.md", "kind": "natural"}
 {"query": "long term thrips management plan", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Pest Control/20-17-7-Thrips_Removal_Lasagna.md", "kind": "keyword"}
 {"query": "best way to eliminate thrips through a combination of organic and physical methods", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Pest Control/20-17-7-Thrips_Removal_Lasagna.md", "kind": "keyword"}
-{"query": "What is the tech stack for the custom scheduling app with Supabase and n8n?", "relevant_id": "20 - Areas/20.14 - U of Digital/U of Digital - Scheduling App/13-4-46-Custom_Scheduling_Tool_Development.md", "kind": "natural"}
-{"query": "scheduling tool with magic links and blackout dates", "relevant_id": "20 - Areas/20.14 - U of Digital/U of Digital - Scheduling App/13-4-46-Custom_Scheduling_Tool_Development.md", "kind": "keyword"}
-{"query": "How to automate expert and client availability without manual email invites?", "relevant_id": "20 - Areas/20.14 - U of Digital/U of Digital - Scheduling App/13-4-46-Custom_Scheduling_Tool_Development.md", "kind": "natural"}
-{"query": "How to structure a low-cost photography course MVP with a free first lesson", "relevant_id": "20 - Areas/20.10 - Oskar/Oskar's Course.md", "kind": "natural"}
-{"query": "Conversion stats for Unsplash traffic and the 1% daily improvement rule", "relevant_id": "20 - Areas/20.10 - Oskar/Oskar's Course.md", "kind": "keyword"}
-{"query": "Pricing strategy and sales funnel for a photography e-learning offer", "relevant_id": "20 - Areas/20.10 - Oskar/Oskar's Course.md", "kind": "keyword"}
 {"query": "How to move a feature branch's commits onto master using rebase", "relevant_id": "30 - Resources/30.03 - Programming and CS/How to Use Git - Rebase from Master.md", "kind": "natural"}
 {"query": "git rebase feature changes into main branch", "relevant_id": "30 - Resources/30.03 - Programming and CS/How to Use Git - Rebase from Master.md", "kind": "keyword"}
 {"query": "steps for cleaning up history when merging a dev branch into master", "relevant_id": "30 - Resources/30.03 - Programming and CS/How to Use Git - Rebase from Master.md", "kind": "keyword"}
@@ -64,18 +51,11 @@
 {"query": "How can I dynamically switch between expensive and cheap LLMs to save money?", "relevant_id": "20 - Areas/Courses/Learn LLMs/Papers/✅ RouteLLM Learning to Route LLMs with Preference Data.md", "kind": "natural"}
 {"query": "Router model transfer learning human preference data", "relevant_id": "20 - Areas/Courses/Learn LLMs/Papers/✅ RouteLLM Learning to Route LLMs with Preference Data.md", "kind": "keyword"}
 {"query": "LLM cost optimization routing framework performance trade-off", "relevant_id": "20 - Areas/Courses/Learn LLMs/Papers/✅ RouteLLM Learning to Route LLMs with Preference Data.md", "kind": "keyword"}
-{"query": "Kyle Brodeur cover letter for Customer.io", "relevant_id": "20 - Areas/20.00 - Personal/Job Search/Cover Letters/10.04.01 - Customer.io Cover Letter - Created @2024.06.25.md", "kind": "keyword"}
-{"query": "What did I write in my application for the marketing automation job?", "relevant_id": "20 - Areas/20.00 - Personal/Job Search/Cover Letters/10.04.01 - Customer.io Cover Letter - Created @2024.06.25.md", "kind": "natural"}
-{"query": "SaaS marketing ops specialist role application mentioning SQL and GA", "relevant_id": "20 - Areas/20.00 - Personal/Job Search/Cover Letters/10.04.01 - Customer.io Cover Letter - Created @2024.06.25.md", "kind": "keyword"}
 {"query": "How should I structure a basic tracker for my Venus flytraps and tropicals?", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Cataloging/16-12-55-Plant_Database_Design_Guide.md", "kind": "natural"}
 {"query": "indoor botanical database schema airtable notion", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Cataloging/16-12-55-Plant_Database_Design_Guide.md", "kind": "keyword"}
 {"query": "What are the essential fields for a scalable plant care log?", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Cataloging/16-12-55-Plant_Database_Design_Guide.md", "kind": "natural"}
-{"query": "Why is this person a good fit for the Technical Solutions Consultant opening at Pypestream?", "relevant_id": "20 - Areas/20.00 - Personal/Job Search/Cover Letters/10.04.02 - Pypestream Cover Letter.md", "kind": "natural"}
-{"query": "Node.js video migration and CDP event reduction projects", "relevant_id": "20 - Areas/20.00 - Personal/Job Search/Cover Letters/10.04.02 - Pypestream Cover Letter.md", "kind": "keyword"}
-{"query": "automation expert with experience in LLMs and no-code tools", "relevant_id": "20 - Areas/20.00 - Personal/Job Search/Cover Letters/10.04.02 - Pypestream Cover Letter.md", "kind": "keyword"}
 {"query": "Who is that old acquaintance that keeps appearing in my nightmares?", "relevant_id": "40 - Archive/2023.09.14 Thursday.md", "kind": "natural"}
 {"query": "dream journal vehicle accident illness", "relevant_id": "40 - Archive/2023.09.14 Thursday.md", "kind": "keyword"}
-{"query": "How to login to my Audible account with the mcgaw email?", "relevant_id": "40 - Archive/2023.09.14 Thursday.md", "kind": "natural"}
 {"query": "How to set up the automated demo page and registration flow for Sitesnap?", "relevant_id": "10 - Projects/10.14 - Sitesnap/12-05-24 TODOs.md", "kind": "natural"}
 {"query": "Sitesnap gravity form logic for builder redirects and client onboarding", "relevant_id": "10 - Projects/10.14 - Sitesnap/12-05-24 TODOs.md", "kind": "keyword"}
 {"query": "WP dashboard and logo color extraction tasks for the site builder project", "relevant_id": "10 - Projects/10.14 - Sitesnap/12-05-24 TODOs.md", "kind": "keyword"}
@@ -106,9 +86,6 @@
 {"query": "Where is that audiobook about dealing with different personality types?", "relevant_id": "40 - Archive/Surrounded_by_Idiots.md", "kind": "natural"}
 {"query": "communication styles book link", "relevant_id": "40 - Archive/Surrounded_by_Idiots.md", "kind": "keyword"}
 {"query": "How to handle people who are difficult to understand?", "relevant_id": "40 - Archive/Surrounded_by_Idiots.md", "kind": "natural"}
-{"query": "How to use AI and process mapping to improve educational technology", "relevant_id": "20 - Areas/20.00 - Personal/Job Search/Taglines.md", "kind": "natural"}
-{"query": "Operational efficiency through custom workflow development", "relevant_id": "20 - Areas/20.00 - Personal/Job Search/Taglines.md", "kind": "keyword"}
-{"query": "AI automation for EdTech systems design", "relevant_id": "20 - Areas/20.00 - Personal/Job Search/Taglines.md", "kind": "keyword"}
 {"query": "How to interpret condensation patterns for Alocasia humidity?", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Plant Tech/Alocasia Smart Grow Box/Nov 8, 2024-**Alocasia Environment Pattern Guide- Daily Checks, Actions, and Sweet Spot Indicators**.md", "kind": "natural"}
 {"query": "Alocasia setup star field droplets meaning", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Plant Tech/Alocasia Smart Grow Box/Nov 8, 2024-**Alocasia Environment Pattern Guide- Daily Checks, Actions, and Sweet Spot Indicators**.md", "kind": "keyword"}
 {"query": "What do running or foggy water drops indicate in a plant enclosure?", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Plant Tech/Alocasia Smart Grow Box/Nov 8, 2024-**Alocasia Environment Pattern Guide- Daily Checks, Actions, and Sweet Spot Indicators**.md", "kind": "natural"}
@@ -133,18 +110,12 @@
 {"query": "How to compare soil versus soil-less seed germination techniques", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Seed Starting/seed-starting-intro.md", "kind": "natural"}
 {"query": "methods for testing different ways to start seeds", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Seed Starting/seed-starting-intro.md", "kind": "keyword"}
 {"query": "gardening trials for non-soil seed starting preference", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Seed Starting/seed-starting-intro.md", "kind": "keyword"}
-{"query": "How to capture employer category for Beehiiv signups using surveys", "relevant_id": "20 - Areas/20.14 - U of Digital/Project - User Self-Attribution.md", "kind": "natural"}
-{"query": "Adding a professional background dropdown to newsletter registrations", "relevant_id": "20 - Areas/20.14 - U of Digital/Project - User Self-Attribution.md", "kind": "keyword"}
-{"query": "Beehiiv industry field workaround via survey redirect", "relevant_id": "20 - Areas/20.14 - U of Digital/Project - User Self-Attribution.md", "kind": "keyword"}
 {"query": "What are the different pricing plans for Canvas Workspaces?", "relevant_id": "30 - Resources/30.00 - Sort/Flexible Workspace Solutions.md", "kind": "natural"}
 {"query": "coworking options with 24 hour access and business addresses", "relevant_id": "30 - Resources/30.00 - Sort/Flexible Workspace Solutions.md", "kind": "keyword"}
 {"query": "How many days a month does the basic membership allow?", "relevant_id": "30 - Resources/30.00 - Sort/Flexible Workspace Solutions.md", "kind": "natural"}
 {"query": "How to automate WordPress installs and customer setup via Plesk REST API?", "relevant_id": "10 - Projects/10.14 - Sitesnap/Claude-Provisioning Customers and Websites with Plesk API 1.md", "kind": "natural"}
 {"query": "JavaScript Docker project for Plesk hosting automation", "relevant_id": "10 - Projects/10.14 - Sitesnap/Claude-Provisioning Customers and Websites with Plesk API 1.md", "kind": "keyword"}
 {"query": "Using WP Toolkit and Plesk API for subscription provisioning", "relevant_id": "10 - Projects/10.14 - Sitesnap/Claude-Provisioning Customers and Websites with Plesk API 1.md", "kind": "keyword"}
-{"query": "What are the hardware configuration details for the five server models?", "relevant_id": "20 - Areas/20.10 - Oskar/Octoserver.md", "kind": "natural"}
-{"query": "Exxact configurator project Octominer integration", "relevant_id": "20 - Areas/20.10 - Oskar/Octoserver.md", "kind": "keyword"}
-{"query": "How many GPU and CPU options are listed in the 95 row server spreadsheet?", "relevant_id": "20 - Areas/20.10 - Oskar/Octoserver.md", "kind": "natural"}
 {"query": "What did Danny Steenman say about the dangers of AI-generated code bloat?", "relevant_id": "20 - Areas/20.13 - Tech Writing/Danny Steenman on LinkedIn I&39;m seeing a disturbing trend in AI assisted software…  440 comments.md", "kind": "natural"}
 {"query": "AWS compliance expert AI software development trends", "relevant_id": "20 - Areas/20.13 - Tech Writing/Danny Steenman on LinkedIn I&39;m seeing a disturbing trend in AI assisted software…  440 comments.md", "kind": "keyword"}
 {"query": "Why is rapid AI coding making systems harder to maintain?", "relevant_id": "20 - Areas/20.13 - Tech Writing/Danny Steenman on LinkedIn I&39;m seeing a disturbing trend in AI assisted software…  440 comments.md", "kind": "natural"}
@@ -202,9 +173,6 @@
 {"query": "Where can I upload clips to share with people globally?", "relevant_id": "40 - Archive/Lecture 1 - Neural Network from Scratch Coding Neurons and Layers.md", "kind": "natural"}
 {"query": "Video distribution platform link", "relevant_id": "40 - Archive/Lecture 1 - Neural Network from Scratch Coding Neurons and Layers.md", "kind": "keyword"}
 {"query": "How do I post videos for family and friends?", "relevant_id": "40 - Archive/Lecture 1 - Neural Network from Scratch Coding Neurons and Layers.md", "kind": "natural"}
-{"query": "How should Lia and Dan coordinate the creation of project cards for the McGaw GTM?", "relevant_id": "20 - Areas/20.12 - UTM.io-McGaw/01-15-25 - McGaw GTM.md", "kind": "natural"}
-{"query": "Stack Builder marketing task alignment process", "relevant_id": "20 - Areas/20.12 - UTM.io-McGaw/01-15-25 - McGaw GTM.md", "kind": "keyword"}
-{"query": "Who is responsible for adding tags and cards to the 2025 GTM suggestion list?", "relevant_id": "20 - Areas/20.12 - UTM.io-McGaw/01-15-25 - McGaw GTM.md", "kind": "natural"}
 {"query": "What are the capabilities and developer of the Seed Starting Specialist AI?", "relevant_id": "40 - Archive/1-36-4-Gardening_Guide_and_Support.md", "kind": "natural"}
 {"query": "soil-less seed germination experiment plan", "relevant_id": "40 - Archive/1-36-4-Gardening_Guide_and_Support.md", "kind": "keyword"}
 {"query": "How does the gardening bot use Python and DALL-E to help with planting?", "relevant_id": "40 - Archive/1-36-4-Gardening_Guide_and_Support.md", "kind": "natural"}
@@ -214,8 +182,6 @@
 {"query": "Where is the July 2023 revision for CoverDoc?", "relevant_id": "40 - Archive/CoverDoc_Update_July_2023.md", "kind": "natural"}
 {"query": "CoverDoc latest email update", "relevant_id": "40 - Archive/CoverDoc_Update_July_2023.md", "kind": "keyword"}
 {"query": "recent modifications to CoverDoc documentation", "relevant_id": "40 - Archive/CoverDoc_Update_July_2023.md", "kind": "keyword"}
-{"query": "How should I write and who should I target for the McGaw agency account?", "relevant_id": "30 - Resources/30.05 - AI/Prompts/Target Prospect Prompt.md", "kind": "natural"}
-{"query": "Dan McGaw brand voice and ideal customer profile", "relevant_id": "30 - Resources/30.05 - AI/Prompts/Target Prospect Prompt.md", "kind": "keyword"}
 {"query": "Guidelines for content tone and company size for the tech stack client", "relevant_id": "30 - Resources/30.05 - AI/Prompts/Target Prospect Prompt.md", "kind": "keyword"}
 {"query": "How does the Apollo model manage to beat larger 7B LMMs with only 3B parameters?", "relevant_id": "30 - Resources/30.05 - AI/Papers/Apollo An Exploration of Video Understanding in Large Multimodal Models.md", "kind": "natural"}
 {"query": "Scaling consistency for video understanding model design", "relevant_id": "30 - Resources/30.05 - AI/Papers/Apollo An Exploration of Video Understanding in Large Multimodal Models.md", "kind": "keyword"}
@@ -271,9 +237,6 @@
 {"query": "how to update environment variables after chocolatey setup", "relevant_id": "40 - Archive/How can you refresh Windows Environment variables?.md", "kind": "natural"}
 {"query": "cmd command for refreshing path without restart", "relevant_id": "40 - Archive/How can you refresh Windows Environment variables?.md", "kind": "keyword"}
 {"query": "What is the script to reload shell environment variables for Choco?", "relevant_id": "40 - Archive/How can you refresh Windows Environment variables?.md", "kind": "natural"}
-{"query": "How should I structure a cover letter to balance technical wins and personal storytelling?", "relevant_id": "20 - Areas/20.00 - Personal/Job Search/Cover Letters/Cover Letter Outline and Prompt.md", "kind": "natural"}
-{"query": "Guide for writing job application narratives with measurable outcomes", "relevant_id": "20 - Areas/20.00 - Personal/Job Search/Cover Letters/Cover Letter Outline and Prompt.md", "kind": "keyword"}
-{"query": "Best practices for tailoring a professional bio and application style", "relevant_id": "20 - Areas/20.00 - Personal/Job Search/Cover Letters/Cover Letter Outline and Prompt.md", "kind": "keyword"}
 {"query": "Where to download the 3D print file for the tiny kachur duck?", "relevant_id": "40 - Archive/RUBBER_DUCK_MINIATURE_KACHUR_STL.md", "kind": "natural"}
 {"query": "Kachur duck miniature STL source", "relevant_id": "40 - Archive/RUBBER_DUCK_MINIATURE_KACHUR_STL.md", "kind": "keyword"}
 {"query": "How do I find the 3D model for the small rubber kachur?", "relevant_id": "40 - Archive/RUBBER_DUCK_MINIATURE_KACHUR_STL.md", "kind": "natural"}
@@ -288,7 +251,6 @@
 {"query": "Updating composite product totals with protection plan fees", "relevant_id": "10 - Projects/10.12 - Octoserver Refactor 07.07.24/Octoserver - Calculated warranty pricing in cart and checkout.md", "kind": "keyword"}
 {"query": "What did I record about my financial stress and mental health on March 18?", "relevant_id": "00 - System/00.04 - Journal/_reviewed/2025-03-18.md", "kind": "natural"}
 {"query": "HubSpot LinkedIn landing page setup", "relevant_id": "00 - System/00.04 - Journal/_reviewed/2025-03-18.md", "kind": "keyword"}
-{"query": "Details about the Intellum BigQuery questions and Beehiiv attribution", "relevant_id": "00 - System/00.04 - Journal/_reviewed/2025-03-18.md", "kind": "keyword"}
 {"query": "How do I automate nutrient and pH data collection for a garden using a Raspberry Pi and Airtable?", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Plant Tech/Nutrient solution sensor thinking.md", "kind": "natural"}
 {"query": "Raspberry Pi hydroponics sensor types for EC and dissolved oxygen", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Plant Tech/Nutrient solution sensor thinking.md", "kind": "keyword"}
 {"query": "Ways to sync water quality readings from microcontrollers to an Airtable database", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Plant Tech/Nutrient solution sensor thinking.md", "kind": "keyword"}
@@ -313,12 +275,7 @@
 {"query": "How did I plan to document the switch from dirt to LECA and PON?", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Design-Content/Discussion on Office Gardener Topics.md", "kind": "natural"}
 {"query": "Metsa Chroma project with wife", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Design-Content/Discussion on Office Gardener Topics.md", "kind": "keyword"}
 {"query": "What was the content outline for the Office Gardener blog series?", "relevant_id": "20 - Areas/20.06 - OfficeGardener/Design-Content/Discussion on Office Gardener Topics.md", "kind": "natural"}
-{"query": "What were my main achievements regarding the Beehiiv setup and the finance tracker?", "relevant_id": "40 - Archive/08162024 - Weekly Review.md", "kind": "natural"}
-{"query": "second brain audiobook and McGaw contract status", "relevant_id": "40 - Archive/08162024 - Weekly Review.md", "kind": "keyword"}
 {"query": "Did I finish the Aerogarden content and schedule the anatomy visit?", "relevant_id": "40 - Archive/08162024 - Weekly Review.md", "kind": "natural"}
-{"query": "How to convert ad tech users from the Privacy Sandbox course into paying customers?", "relevant_id": "10 - Projects/10.17 - U of Digital Experience/10.07.05 - 091724 - CRO-UX Review.md", "kind": "natural"}
-{"query": "LMS user journey and upsell strategy for Google partner traffic", "relevant_id": "10 - Projects/10.17 - U of Digital Experience/10.07.05 - 091724 - CRO-UX Review.md", "kind": "keyword"}
-{"query": "Privacy sandbox bundle lead generation and conversion paths", "relevant_id": "10 - Projects/10.17 - U of Digital Experience/10.07.05 - 091724 - CRO-UX Review.md", "kind": "keyword"}
 {"query": "How does the threading model of a GPU differ from a CPU for data processing?", "relevant_id": "20 - Areas/Courses/_backlog/Introduction to CUDA Programming for Python Developers.md", "kind": "natural"}
 {"query": "Comparison of RTX 4090 CUDA cores versus general purpose CPU cores", "relevant_id": "20 - Areas/Courses/_backlog/Introduction to CUDA Programming for Python Developers.md", "kind": "keyword"}
 {"query": "Software frameworks that interface with cuDNN and cuBLAS for tensor operations", "relevant_id": "20 - Areas/Courses/_backlog/Introduction to CUDA Programming for Python Developers.md", "kind": "keyword"}
@@ -400,12 +357,8 @@
 {"query": "How do I avoid common mistakes in software engineering according to that audiobook?", "relevant_id": "40 - Archive/The_Road_Less_Stupid.md", "kind": "natural"}
 {"query": "programming errors avoidance guide audible", "relevant_id": "40 - Archive/The_Road_Less_Stupid.md", "kind": "keyword"}
 {"query": "What is the title of the book about making fewer blunders when coding?", "relevant_id": "40 - Archive/The_Road_Less_Stupid.md", "kind": "natural"}
-{"query": "Why is my Vuetify autocomplete not updating the selected timezone value?", "relevant_id": "20 - Areas/20.14 - U of Digital/U of Digital - Scheduling App/13-29-37-App_Development_Assistance.md", "kind": "natural"}
-{"query": "v-model mismatch moment-timezone select component", "relevant_id": "20 - Areas/20.14 - U of Digital/U of Digital - Scheduling App/13-29-37-App_Development_Assistance.md", "kind": "keyword"}
-{"query": "How to fix a non-responsive dropdown in a Vue timezone picker", "relevant_id": "20 - Areas/20.14 - U of Digital/U of Digital - Scheduling App/13-29-37-App_Development_Assistance.md", "kind": "natural"}
 {"query": "Where is the list of my financial payments and tax obligations for March 4th?", "relevant_id": "00 - System/00.04 - Journal/_reviewed/2025-03-04.md", "kind": "natural"}
 {"query": "Daily checklist and expense tracking for 2025-03-04", "relevant_id": "00 - System/00.04 - Journal/_reviewed/2025-03-04.md", "kind": "keyword"}
-{"query": "What were the specific payment amounts for T-Mobile and Best Egg on my daily review page?", "relevant_id": "00 - System/00.04 - Journal/_reviewed/2025-03-04.md", "kind": "natural"}
 {"query": "How to apply custom quantity discounts to WooCommerce composite products when get_price only returns the base cost?", "relevant_id": "10 - Projects/10.12 - Octoserver Refactor 07.07.24/9-1-30-Woocommerce_Composite_Products_Discounts.md", "kind": "natural"}
 {"query": "woocommerce_before_calculate_totals composite product price configuration bug", "relevant_id": "10 - Projects/10.12 - Octoserver Refactor 07.07.24/9-1-30-Woocommerce_Composite_Products_Discounts.md", "kind": "keyword"}
 {"query": "Why does the composite products plugin override the price during cart total calculations?", "relevant_id": "10 - Projects/10.12 - Octoserver Refactor 07.07.24/9-1-30-Woocommerce_Composite_Products_Discounts.md", "kind": "natural"}
@@ -413,11 +366,7 @@
 {"query": "video sharing platform link", "relevant_id": "30 - Resources/30.05 - AI/Why are vector databases so FAST?\n.md", "kind": "keyword"}
 {"query": "how to upload content for friends and family to see", "relevant_id": "30 - Resources/30.05 - AI/Why are vector databases so FAST?\n.md", "kind": "natural"}
 {"query": "How much money is needed for medical equipment and groceries?", "relevant_id": "40 - Archive/2024-09-17.md", "kind": "natural"}
-{"query": "McGaw payment date and website renewals", "relevant_id": "40 - Archive/2024-09-17.md", "kind": "keyword"}
 {"query": "healthcare and domain registration budget", "relevant_id": "40 - Archive/2024-09-17.md", "kind": "keyword"}
-{"query": "What are the risks of using Google Apps Script properties for a task queue in the U of D integration?", "relevant_id": "10 - Projects/10.17 - U of Digital Experience/U of D Backend Refactor.md", "kind": "natural"}
-{"query": "Beehiiv and Intellum backend sync vulnerabilities", "relevant_id": "10 - Projects/10.17 - U of Digital Experience/U of D Backend Refactor.md", "kind": "keyword"}
-{"query": "Why is the current WordPress to Intellum webhook system unreliable?", "relevant_id": "10 - Projects/10.17 - U of Digital Experience/U of D Backend Refactor.md", "kind": "natural"}
 {"query": "Why do I sound different when thinking compared to speaking?", "relevant_id": "20 - Areas/20.00 - Personal/Thoughts Log/2023-08-27T21.57.30-05.00.md", "kind": "natural"}
 {"query": "tips for simplifying communication to avoid sounding unintelligent", "relevant_id": "20 - Areas/20.00 - Personal/Thoughts Log/2023-08-27T21.57.30-05.00.md", "kind": "keyword"}
 {"query": "practice notes on improving public speaking and reducing filler words", "relevant_id": "20 - Areas/20.00 - Personal/Thoughts Log/2023-08-27T21.57.30-05.00.md", "kind": "keyword"}

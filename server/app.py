@@ -1,4 +1,4 @@
-"""pi-vault-mind embedding service on Modal.
+"""modal-embedding-server: embedding service on Modal.
 
 Three capabilities, one App:
 
@@ -55,7 +55,7 @@ logging.basicConfig(
     level=os.environ.get("MODAL_EMBED_LOG_LEVEL", "INFO"),
     format='{"ts":"%(asctime)s","level":"%(levelname)s","msg":"%(message)s"}',
 )
-log = logging.getLogger("pvm.modal")
+log = logging.getLogger("modal_embedding.server")
 
 # Image
 image = (
@@ -91,7 +91,7 @@ VOLUMES = {config.VECTORS_DIR: vectors_volume, config.CACHE_DIR: cache_volume}
 # auth secret; without it every protected route returns 503, and the bulk
 # worker can't load gated models without HF_TOKEN). To stand up the infra
 # *before* the secrets exist (create them, then redeploy), set
-# PVM_ATTACH_SECRETS=0 — the Secret objects are then not created at all, so
+# MODAL_EMBED_ATTACH_SECRETS=0 — the Secret objects are then not created at all, so
 # Modal doesn't register them as code deps (which would otherwise mismatch
 # and crash-loop the container).
 _ATTACH_SECRETS = os.environ.get("MODAL_EMBED_ATTACH_SECRETS", "1") not in ("", "0", "false")
@@ -353,11 +353,11 @@ class EmbeddingService:
         # background daemon thread so container readiness (and /health,
         # /models) is NOT blocked on a (possibly slow / gated) model download.
         # Only meaningful for the sentence-transformers backend; ollama/hf
-        # backends are no-ops. Skip entirely with PVM_PREWARM=0.
+        # backends are no-ops. Skip entirely with MODAL_EMBED_PREWARM=0.
         import threading
 
         if os.environ.get("MODAL_EMBED_PREWARM", "1") in ("", "0", "false"):
-            log.info("pre-warm disabled by PVM_PREWARM")
+            log.info("pre-warm disabled by MODAL_EMBED_PREWARM")
             return
 
         def _warm():

@@ -10,7 +10,7 @@ image = (
     .pip_install("lancedb>=0.16.0", "pyarrow>=17.0.0")
     .add_local_python_source("config", "embedders", "store", "web", "schemas")
 )
-app = modal.App("pi-vault-mind-diag", image=image)
+app = modal.App(f"{config.APP_NAME}-diag", image=image)
 vectors_volume = modal.Volume.from_name(config.VECTORS_VOLUME_NAME, create_if_missing=True)
 VOLUMES = {config.VECTORS_DIR: vectors_volume}
 

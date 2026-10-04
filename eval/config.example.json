@@ -48,7 +48,7 @@
 			"name": "embeddinggemma (modal)",
 			"provider": "modal",
 			"model": "embeddinggemma",
-			"_note": "needs PVM_MODAL_URL + PVM_API_TOKEN + deployed modal/app.py"
+			"_note": "needs MODAL_EMBED_MODAL_URL + MODAL_EMBED_API_TOKEN + deployed server/app.py"
 		}
 	]
 }

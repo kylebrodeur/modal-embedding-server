@@ -2,7 +2,7 @@
 # requires-python = ">=3.10"
 # dependencies = ["numpy>=1.26", "requests>=2.31"]
 # ///
-"""Retrieval eval for embedding model selection (pi-vault-mind).
+"""Retrieval eval for embedding model selection.
 
 Compares embedders on YOUR data and reports recall@k, MRR@10, query latency,
 and an (approximate) cost so the canonical-model choice is data-driven rather

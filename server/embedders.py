@@ -1,6 +1,6 @@
 """Pluggable, config-driven embedder registry.
 
-EmbeddingGemma is the canonical model for pi-vault-mind, but the architecture
+EmbeddingGemma is the canonical model for this server, but the architecture
 is deliberately multi-model: every vector is tagged with the model + dimension
 that produced it, and the LanceDB tables on the Volume are namespaced by
 ``{model}__{dim}``. That lets us trial alternative embedders (Qwen3, BGE-M3,
@@ -26,7 +26,7 @@ self-hosting open-weight models.
 Config-driven registry
 -----------------------
 The built-in :data:`REGISTRY` is a set of defaults. An optional JSON registry
-file (``PVM_REGISTRY_FILE``) is merged *over* those defaults at import time, so
+file (``MODAL_EMBED_REGISTRY_FILE``) is merged *over* those defaults at import time, so
 adding a brand-new embedder requires only a config entry (+ an HF token if
 gated) — **no code change**. See :func:`build_registry`.
 

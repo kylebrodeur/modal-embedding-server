@@ -2,7 +2,7 @@
 # requires-python = ">=3.10"
 # dependencies = ["requests>=2.31"]
 # ///
-"""Minimal HTTP client for the deployed pi-vault-mind embedding service.
+"""Minimal HTTP client for the deployed modal-embedding-server service.
 
 This mirrors what the TypeScript client (`src/modal-client.ts`) does, and is
 handy for smoke-testing a deployment from the command line.

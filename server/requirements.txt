@@ -1,4 +1,4 @@
-# Dependencies for the pi-vault-mind Modal embedding app.
+# Dependencies for the modal-embedding-server Modal embedding app.
 #
 # This project uses uv. You normally don't need this file:
 #   - The Modal CLI runs via `uvx modal …` (ephemeral) or `uv tool install modal`.

@@ -103,7 +103,7 @@ def build_app(
         ReembedSource=ReembedSource, V1EmbeddingRequest=V1EmbeddingRequest,
     )
 
-    web = FastAPI(title="pi-vault-mind embeddings", version="0.1.0")
+    web = FastAPI(title="modal-embedding-server embeddings", version="0.1.0")
     api_token = getattr(cfg, "API_TOKEN", "") or ""
 
     def require_auth(authorization: str | None = Header(default=None)):

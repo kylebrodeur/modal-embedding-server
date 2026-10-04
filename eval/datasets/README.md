@@ -9,7 +9,7 @@ Point the eval at one of these with `queries.path` in `eval/config.json`:
 
 ```jsonc
 {
-  "corpus":  { "path": "/path/to/recycvape/ReturnVape", "type": "markdown" },
+  "corpus":  { "path": "/path/to/your-vault", "type": "markdown" },
   "queries": { "path": "eval/datasets/recycvape-queries.jsonl" }
 }
 ```
@@ -22,7 +22,7 @@ so model-to-model recall comparisons are apples-to-apples.
 
 | File | Corpus | Notes |
 |---|---|---|
-| `recycvape-queries.jsonl` | [`kylebrodeur/recycvape`](https://github.com/kylebrodeur/recycvape) → `ReturnVape/` | 29 hand-written queries over 17 distinct notes. Mix of `natural` (20) and `keyword` (9) phrasings so you can see the semantic-vs-lexical gap. Stub notes (`[Content to be added]`) are intentionally not targeted. |
+| `recycvape-queries.jsonl` | Any markdown vault (pair it with a `corpus.path` per the schema above) | 29 hand-written queries over 17 distinct notes. Mix of `natural` (20) and `keyword` (9) phrasings so you can see the semantic-vs-lexical gap. Stub notes (`[Content to be added]`) are intentionally not targeted. |
 
 `kind` (`natural` | `keyword`) is metadata for slicing results; the eval reads
 only `query` and `relevant_id` and ignores extra fields.

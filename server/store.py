@@ -61,7 +61,7 @@ def table_name(collection: str, model: str, dim: int) -> str:
     ``namespacedTableName`` in ``src/modal-config.ts`` byte-for-byte so the
     sync-down target table is the same on both sides. Model keys in the
     registry may contain hyphens (``minilm-l6``, ``qwen3-0.6b``); collection
-    names in pi-vault-mind are simple (``main``, …). If a future collection
+    names are simple (``main``, …). If a future collection
     name contains ``__`` the parser would be ambiguous — validate collection
     names at ingest time rather than mangling them here.
     """
