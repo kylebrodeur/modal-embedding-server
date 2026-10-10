@@ -136,6 +136,15 @@ def observe(payload): print(payload["count"])
 
 The tag set changes only in this package's releases.
 
+## Operator commands (`mtk`)
+
+This package ships an `mtk embedding` command group in
+`server/mtk-commands.toml`; [modal-toolkit](https://github.com/kylebrodeur/modal-toolkit)
+mounts it when this repo is present in the workspace:
+
+- `mtk embedding sync` — guidance for the client-side vector sync down to your local LanceDB (Phase 4 of the flight path).
+- `mtk embedding reindex` — rebuild the server-side vector index (`modal run server/app.py`).
+
 ## Part of the Modal Toolkit
 
 Seven standalone Modal utilities from the same author, each extractable and deployable on its own.
