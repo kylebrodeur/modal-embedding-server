@@ -142,8 +142,8 @@ This package ships an `mtk embedding` command group in
 `server/mtk-commands.toml`; [modal-toolkit](https://github.com/kylebrodeur/modal-toolkit)
 mounts it when this repo is present in the workspace:
 
-- `mtk embedding sync` — guidance for the client-side vector sync down to your local LanceDB (Phase 4 of the flight path).
-- `mtk embedding reindex` — rebuild the server-side vector index (`modal run server/app.py`).
+- `mtk embedding sync` - guidance for the client-side vector sync down to your local LanceDB (Phase 4 of the flight path).
+- `mtk embedding reindex` - rebuild the server-side vector index (`modal run server/app.py`).
 
 ## Part of the Modal Toolkit
 

@@ -1,4 +1,4 @@
-# AGENTS.md — modal-embedding-server
+# AGENTS.md - modal-embedding-server
 
 Agent instructions for THIS repo (v1.1.0 on `main`). The family-wide
 rules live in the system workspace's AGENTS.md

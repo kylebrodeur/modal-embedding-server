@@ -69,7 +69,7 @@ The eval can use a Modal-hosted GPU service (`server/app.py`) instead of
 local Ollama. This is useful for:
 
 - **Speed**: the Modal service runs `sentence-transformers` on an **L4 GPU**,
-  which embeds 256-text batches in ~3–15 s vs minutes on local Ollama.
+  which embeds 256-text batches in ~3-15 s vs minutes on local Ollama.
 - **A clean comparison**: the same model (e.g. `embeddinggemma`) produces the
   same vectors whether served via Ollama or Modal's `sentence-transformers`
   backend, so switching providers doesn't confound the experiment.
@@ -139,7 +139,7 @@ The parallel mode prints progress to stdout:
 | corpus size | 996 notes (whole-note) | 18 279 chunks (chunked) |
 | embedder | embeddinggemma (Ollama) | embeddinggemma (sentence-transformers) |
 | wall time | ~25+ min (estimated) | ~15 min (72 batches × 256) |
-| batch latency | ~5–30 s per 32-text batch | ~3–15 s per 256-text batch |
+| batch latency | ~5-30 s per 32-text batch | ~3-15 s per 256-text batch |
 
 With the parallel provider, 72 batches of 256 texts completed in ~15 min.
 At `max_workers: 8`, Modal auto-scaled to 2 containers to handle the
@@ -174,7 +174,7 @@ can transiently fail; re-run once it's warm).
 
 **Unlabeled vault:** to compare models on a vault with no labeled query
 set, set `queries.path` to `null` and the harness auto-generates queries with a
-local Ollama chat model (`queries.auto_generate`). Bump `sample` to ~150–200 for
+local Ollama chat model (`queries.auto_generate`). Bump `sample` to ~150-200 for
 statistical power. On a larger corpus this de-saturates recall and actually
 discriminates between models (a ~50-note corpus does not).
 
