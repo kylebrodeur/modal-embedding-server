@@ -29,6 +29,12 @@ This repository is organized into three specialized pillars to move you from "gu
 
 ---
 
+## Docs
+
+- [Quickstart](docs/quickstart.md): from a new project to a deployed GPU embeddings with a local LanceDB sync, using the `mtk` toolkit.
+- [How-to](docs/how-to.md): day-to-day operation of this server.
+- [Modal Toolkit](https://github.com/kylebrodeur/modal-toolkit): the operator CLI (`mtk`) that deploys it.
+
 ## Quick Start: The "Flight Path"
 
 ### Step 1: Research & Eval (Picking your Model)
