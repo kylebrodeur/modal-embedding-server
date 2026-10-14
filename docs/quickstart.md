@@ -16,19 +16,27 @@ cd embed-lab
 ## 2. Pull the package
 
 ```bash
-mtk pull embedding
+mtk pull embedding --tag <current-release>
 ```
+
+The package is vendored into `vendor/embedding-server/`: a git checkout pinned
+to the exact release tag, read-only and drift-guarded.
 
 ## 3. Write the overlay
 
-`deploys/embedding/deploy.json` names the app `<project>-embed`:
+`deploys/embedding-server/deploy.json` names the app `<project>-embedding`:
 
 ```json
-{ "pkg": "embedding", "app_name": "embed-lab-embed" }
+{
+  "pkg": "embedding",
+  "app_name": "embed-lab-embedding",
+  "upstream": { "repo": "modal-embedding-server", "tag": "<current-release>" }
+}
 ```
 
-`deploys/embedding/deploy.sh` runs `modal deploy` from the pulled checkout by
-path. Keep it in your project.
+`deploys/embedding-server/deploy.sh` deploys the VENDORED copy under
+`vendor/embedding-server/`: never a live checkout. `mtk deploy embedding`
+runs it after the preflight, drift, and secrets gates.
 
 ## 4. Deploy
 
