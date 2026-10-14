@@ -1,10 +1,6 @@
 ---
 name: embedding-server-upgrade
-description: Deploy-and-upgrade discipline for the modal-embedding-server checkout.
-
-Use when a task asks to upgrade, redeploy, or sync this repo, or before
-any modal command that could touch the account from inside this
-checkout.
+description: Deploy-and-upgrade discipline for the modal-embedding-server checkout. Use when a task asks to upgrade, redeploy, or sync this repo, or before any modal command that could touch the account from inside this checkout.
 license: Apache-2.0
 metadata:
   author: kylebrodeur
@@ -69,3 +65,19 @@ boot provenance for an embedding deployment, do it outside this package
   (`mtk libs check`); hand-editing them = drift = refused.
 - Never reset/reinit a checkout to solve version confusion: stop and
   ask Kyle.
+
+## Operating with mtk
+
+Source of truth: the [quickstart](../../docs/quickstart.md) and
+[how-to](../../docs/how-to.md) in this repo, and the toolkit's `mtk` skill.
+
+```bash
+mtk init <project-id>      # from the project directory; checks prerequisites and the account
+mtk pull embedding             # clone this repo into the repos root
+mtk deploy embedding           # preflight the overlay, confirm secrets, run deploys/embedding/deploy.sh
+mtk doctor --pkg embedding     # health and drift
+```
+
+- Overlay: `deploys/embedding/deploy.json` must name the app `<project>-embedding`.
+- Secrets this package declares: embedding-auth (API_TOKEN, generated) and huggingface-secret (HF_TOKEN, you supply). `mtk deploy` asks before creating any.
+- Never run `modal deploy` inside this checkout.
