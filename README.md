@@ -92,18 +92,27 @@ The server is fully configurable via environment variables (prefixed with `MODAL
 
 ### Built-in models
 
-Five models ship in the built-in registry (`server/embedders.py`, `_BUILTIN`).
+Six models ship in the built-in registry (`server/embedders.py`, `_BUILTIN`).
 Set `MODAL_EMBED_ENABLED_MODELS` (comma-separated keys) to restrict which of
 them are exposed via `/models` and accepted by `/embed` + `/jobs`; unset =
-all five enabled.
+all six enabled.
 
 | API key | Native dim | Notes |
 |---|---|---|
 | `embeddinggemma` | 768 | Canonical model (300M, multilingual, Matryoshka: 512/256/128). |
+| `embeddinggemma-2` | 768 | The 740M successor: bf16 on GPU (fp16 silently degrades); loads the 270M text model only via `config_kwargs`. NOT vector-compatible with v1 - adopting it is a re-embed migration. |
 | `qwen3-0.6b` | 1024 | Instruction-tuned query prompt. |
 | `bge-m3` | 1024 | Multilingual, long-context (8k). |
 | `nomic-1.5` | 768 | Matryoshka (512/256/128/64); needs `trust_remote_code`. |
 | `minilm-l6` | 384 | Legacy parity with the local transformers.js fallback. |
+
+Registry entries carry two optional loader-kwargs fields (default empty,
+zero behavior change): `model_kwargs` (forwarded straight to
+`SentenceTransformer`, e.g. `{"torch_dtype": "bf16"}`) and `config_kwargs`
+(forwarded as SentenceTransformer's `config_kwargs=`, e.g. the v2
+selective encoder `{"vision_config": null, "audio_config": null}`). Usable
+in the registry file's per-model objects exactly like the prompts above;
+non-object values are rejected loudly.
 
 ## Examples
 
