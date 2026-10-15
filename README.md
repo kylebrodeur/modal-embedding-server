@@ -153,7 +153,7 @@ mounts it when this repo is present in the workspace:
 
 ## Part of the Modal Toolkit
 
-Seven standalone Modal utilities from the same author, each extractable and deployable on its own.
+Eight standalone Modal utilities from the same author, each extractable and deployable on its own.
 
 The eval-first pattern (benchmark on your data before you deploy) is the entry point for the whole stack: the single-file harness lives at [embed-eval-on-your-vault](https://github.com/kylebrodeur/embed-eval-on-your-vault), and this repo's [`eval/`](eval/) is its canonical multi-provider version.
 
@@ -163,6 +163,7 @@ The eval-first pattern (benchmark on your data before you deploy) is the entry p
 - **[modal-vault-server](https://github.com/kylebrodeur/modal-vault-server):** Hosted Obsidian vault + MCP memory plane: server-side clone via Headless Sync, searchable by MCP-speaking agents.
 - **[modal-toolkit](https://github.com/kylebrodeur/modal-toolkit):** One operator CLI (`mtk`) that runs the fleet: `doctor`, `secrets`, `warm --all`, `shutdown --all`, `cost`, `flow`, `dashboard`.
 - **[modal-victoriametrics-server](https://github.com/kylebrodeur/modal-victoriametrics-server):** The metrics store: single-node VictoriaMetrics on Modal, CPU-only, scale-to-zero, Basic-Auth-gated. Every endpoint is protected; the `mtk metrics` writer's drop-in target.
+- **[modal-shared-libs](https://github.com/kylebrodeur/modal-shared-libs):** the family's shared library home: the lifecycle hooks seam (`libs/hooks.py`) vendored verbatim into every package, refreshed by `mtk libs sync`.
 - **[embed-eval-on-your-vault](https://github.com/kylebrodeur/embed-eval-on-your-vault):** the eval-first pattern (benchmark embedding models on your own data before you deploy) as a single-file, zero-dependency harness.
 
 ## Ecosystem Flowchart
