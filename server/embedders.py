@@ -41,7 +41,7 @@ import json
 import os
 import threading
 from collections import OrderedDict
-from dataclasses import dataclass, replace
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any, Literal
 
@@ -89,6 +89,18 @@ class EmbedderSpec:
     trust_remote_code: bool = False
     """Pass ``trust_remote_code=True`` to the loader (e.g. Nomic)."""
 
+    model_kwargs: dict[str, Any] = field(default_factory=dict)
+    """Loader kwargs for the sentence-transformers backend, forwarded as
+    ``SentenceTransformer(**model_kwargs)`` (e.g. ``torch_dtype: bf16`` -
+    embeddinggemma-2's card is explicit that fp16 silently degrades). Empty
+    = zero behavior change."""
+
+    config_kwargs: dict[str, Any] = field(default_factory=dict)
+    """Model-config kwargs for the sentence-transformers backend, forwarded
+    inside ``SentenceTransformer(config_kwargs=...)`` (e.g. the v2 selective
+    encoder: ``{"vision_config": None, "audio_config": None}`` loads the
+    text model only). Empty = the model's own defaults."""
+
     enabled: bool = True
     """Whether the model is exposed via /models and accepted by /embed + /jobs.
     The registry merge flips this to disable a built-in model from config."""
@@ -115,10 +127,7 @@ class EmbedderSpec:
         if dim in self.matryoshka_dims:
             return dim
         allowed = (self.native_dim, *self.matryoshka_dims)
-        raise ValueError(
-            f"Model '{self.key}' cannot produce {dim}-dim vectors. "
-            f"Allowed: {sorted(set(allowed))}."
-        )
+        raise ValueError(f"Model '{self.key}' cannot produce {dim}-dim vectors. Allowed: {sorted(set(allowed))}.")
 
     def format(self, text: str, task: Task) -> str:
         prompt = self.query_prompt if task == "query" else self.document_prompt
@@ -136,6 +145,8 @@ class EmbedderSpec:
             "document_prompt": self.document_prompt,
             "gated": self.gated,
             "trust_remote_code": self.trust_remote_code,
+            "model_kwargs": self.model_kwargs,
+            "config_kwargs": self.config_kwargs,
             "enabled": self.enabled,
             "notes": self.notes,
         }
@@ -161,9 +172,7 @@ _BUILTIN: dict[str, EmbedderSpec] = {
         key="qwen3-0.6b",
         hf_id="Qwen/Qwen3-Embedding-0.6B",
         native_dim=1024,
-        query_prompt=(
-            "Instruct: Given a search query, retrieve relevant passages\nQuery: {text}"
-        ),
+        query_prompt=("Instruct: Given a search query, retrieve relevant passages\nQuery: {text}"),
         notes="Strong MTEB scores; instruction-tuned query prompt.",
     ),
     "bge-m3": EmbedderSpec(
@@ -171,6 +180,22 @@ _BUILTIN: dict[str, EmbedderSpec] = {
         hf_id="BAAI/bge-m3",
         native_dim=1024,
         notes="Multilingual, long-context (8k). No asymmetric prompt needed.",
+    ),
+    "embeddinggemma-2": EmbedderSpec(
+        key="embeddinggemma-2",
+        hf_id="google/embeddinggemma-2",
+        native_dim=768,
+        matryoshka_dims=(512, 256, 128),
+        query_prompt="task: search result | query: {text}",
+        document_prompt="title: none | text: {text}",
+        model_kwargs={"torch_dtype": "bf16"},
+        config_kwargs={"vision_config": None, "audio_config": None},
+        notes=(
+            "740M multimodal-capable (this entry loads the 270M text model "
+            "only via config_kwargs). bf16 on GPU: fp16 NaNs silently "
+            "degrade. NOT vector-compatible with embeddinggemma (v1): "
+            "adopting it is a re-embed migration."
+        ),
     ),
     "nomic-1.5": EmbedderSpec(
         key="nomic-1.5",
@@ -215,9 +240,7 @@ def _merge_spec(base: EmbedderSpec, overrides: dict[str, Any]) -> EmbedderSpec:
     fields = {f.name for f in base.__dataclass_fields__.values()}  # type: ignore[attr-defined]
     unknown = set(overrides) - fields
     if unknown:
-        raise ValueError(
-            f"Registry override for '{base.key}' has unknown fields: {sorted(unknown)}"
-        )
+        raise ValueError(f"Registry override for '{base.key}' has unknown fields: {sorted(unknown)}")
 
     kwargs: dict[str, Any] = {}
     if "native_dim" in overrides:
@@ -238,6 +261,11 @@ def _merge_spec(base: EmbedderSpec, overrides: dict[str, Any]) -> EmbedderSpec:
         "hf_id",
     ):
         if f in overrides:
+            kwargs[f] = overrides[f]
+    for f in ("model_kwargs", "config_kwargs"):
+        if f in overrides:
+            if not isinstance(overrides[f], dict):
+                raise ValueError(f"Registry override '{f}' must be an object, got {overrides[f]!r}")
             kwargs[f] = overrides[f]
     for f in ("gated", "trust_remote_code", "enabled"):
         if f in overrides:
@@ -272,18 +300,13 @@ def build_registry(
             models = data.get("models", {}) if isinstance(data, dict) else {}
             for key, overrides in models.items():
                 if not isinstance(overrides, dict):
-                    raise TypeError(
-                        f"Registry entry '{key}' must be an object, got {type(overrides)}"
-                    )
+                    raise TypeError(f"Registry entry '{key}' must be an object, got {type(overrides)}")
                 if key in registry:
                     registry[key] = _merge_spec(registry[key], overrides)
                 else:
                     # New model: requires the minimal identifying fields.
                     if "hf_id" not in overrides or "native_dim" not in overrides:
-                        raise ValueError(
-                            f"New registry model '{key}' must define at least "
-                            "'hf_id' and 'native_dim'"
-                        )
+                        raise ValueError(f"New registry model '{key}' must define at least 'hf_id' and 'native_dim'")
                     spec = EmbedderSpec(
                         key=key,
                         hf_id=overrides["hf_id"],
@@ -294,10 +317,7 @@ def build_registry(
     # 3. apply the enabled allow-list
     if enabled_models:
         allow = set(enabled_models)
-        registry = {
-            k: (v if k in allow else replace(v, enabled=False))
-            for k, v in registry.items()
-        }
+        registry = {k: (v if k in allow else replace(v, enabled=False)) for k, v in registry.items()}
 
     return registry
 
@@ -325,9 +345,7 @@ def get_spec(key: str, enabled_only: bool = True) -> EmbedderSpec:
     if key not in pool:
         if key in REGISTRY and not REGISTRY[key].enabled:
             raise KeyError(f"Model '{key}' is registered but disabled.")
-        raise KeyError(
-            f"Unknown embedder '{key}'. Known: {', '.join(sorted(REGISTRY))}."
-        )
+        raise KeyError(f"Unknown embedder '{key}'. Known: {', '.join(sorted(REGISTRY))}.")
     return pool[key]
 
 
@@ -351,6 +369,8 @@ def _load_sentence_transformers(spec: EmbedderSpec, cache_dir: str):
         spec.hf_id,
         cache_folder=cache_dir,
         trust_remote_code=spec.trust_remote_code,
+        model_kwargs=dict(spec.model_kwargs or {}),
+        config_kwargs=dict(spec.config_kwargs or {}),
     )
 
 
@@ -441,9 +461,7 @@ def _embed_ollama(model: dict, formatted, out_dim):
     # so a whole bulk batch is a single round-trip and Ollama can parallelize.
     try:
         body = json.dumps({"model": name, "input": formatted}).encode()
-        req = urllib.request.Request(
-            f"{host}/api/embed", data=body, headers={"Content-Type": "application/json"}
-        )
+        req = urllib.request.Request(f"{host}/api/embed", data=body, headers={"Content-Type": "application/json"})
         with urllib.request.urlopen(req, timeout=120) as resp:
             embeddings = json.loads(resp.read())["embeddings"]
         return _finish(embeddings)
@@ -574,6 +592,4 @@ def embed(
         return _embed_hf(model, spec, formatted, out_dim)
     if spec.backend == "openai-compatible":
         return _embed_openai_compatible(model, formatted, out_dim)
-    raise ValueError(
-        f"Unknown backend '{spec.backend}' for '{spec.key}'"
-    )  # pragma: no cover
+    raise ValueError(f"Unknown backend '{spec.backend}' for '{spec.key}'")  # pragma: no cover

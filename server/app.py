@@ -108,15 +108,15 @@ image = (
         "sentence-transformers>=5.0.0",
         "transformers>=4.56.0",
         "torch>=2.4.0",
+        "torchvision>=0.15.0",
+        "pillow>=9.0.0",
         "lancedb>=0.16.0",
         "pyarrow>=17.0.0",
         "fastapi[standard]>=0.115.0",
         "huggingface_hub>=0.25.0",
     )
     .env({"HF_HOME": config.CACHE_DIR, "SENTENCE_TRANSFORMERS_HOME": config.CACHE_DIR})
-    .add_local_python_source(
-        "config", "embedders", "store", "web", "schemas", "vm_metrics", "libs"
-    )
+    .add_local_python_source("config", "embedders", "store", "web", "schemas", "vm_metrics", "libs")
 )
 
 app = modal.App(config.APP_NAME, image=image)
@@ -146,9 +146,7 @@ _ATTACH_SECRETS = os.environ.get("MODAL_EMBED_ATTACH_SECRETS", "1") not in (
     "0",
     "false",
 )
-auth_secret = (
-    modal.Secret.from_name(config.AUTH_SECRET_NAME) if _ATTACH_SECRETS else None
-)
+auth_secret = modal.Secret.from_name(config.AUTH_SECRET_NAME) if _ATTACH_SECRETS else None
 hf_secret = modal.Secret.from_name(config.HF_SECRET_NAME) if _ATTACH_SECRETS else None
 
 
@@ -249,9 +247,7 @@ def _iter_jsonl(path: str, batch: int):
             yield buf
 
 
-def _iter_reembed(
-    source_collection: str, source_model: str, source_dim: int, batch: int
-):
+def _iter_reembed(source_collection: str, source_model: str, source_dim: int, batch: int):
     """Stream (id, text, metadata) from an existing namespace to re-embed."""
     import lancedb
     import pyarrow as pa  # noqa: F401 - lancedb needs pyarrow at runtime
@@ -265,9 +261,7 @@ def _iter_reembed(
     tbl = db.open_table(name)
     # Stream the source namespace in batches instead of materializing the whole
     # table: a large vault would otherwise load every row into memory at once.
-    for record_batch in (
-        tbl.search().select(["id", "text", "metadata"]).to_batches(batch)
-    ):
+    for record_batch in tbl.search().select(["id", "text", "metadata"]).to_batches(batch):
         records = []
         for r in record_batch.to_pylist():
             meta = r.get("metadata")
@@ -290,9 +284,7 @@ def _iter_reembed(
     secrets=[hf_secret] if _ATTACH_SECRETS else [],
     timeout=60 * 60,  # long jobs allowed
 )
-def embed_batch(
-    job_id: str, collection: str, model: str, dim: int | None, req: dict
-) -> dict:
+def embed_batch(job_id: str, collection: str, model: str, dim: int | None, req: dict) -> dict:
     """Embed records from ``req`` and upsert to the store.
 
     ``req`` is the JSON of the original JobRequest so the worker can resolve
@@ -342,9 +334,7 @@ def embed_batch(
                 yield from _iter_jsonl(req["records_file"], config.BATCH_SIZE)
             elif req.get("reembed_from"):
                 src = req["reembed_from"]
-                yield from _iter_reembed(
-                    src["collection"], src["model"], int(src["dim"]), config.BATCH_SIZE
-                )
+                yield from _iter_reembed(src["collection"], src["model"], int(src["dim"]), config.BATCH_SIZE)
             else:
                 return
 

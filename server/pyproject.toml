@@ -1,6 +1,6 @@
 [project]
 name = "modal-embedding-server"
-version = "1.2.2"
+version = "1.2.3"
 description = "Generic GPU embedding service on Modal with sync protocol and model-selection evals."
 requires-python = ">=3.10"
 dependencies = [
