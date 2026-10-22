@@ -23,11 +23,13 @@ class _CaptureHandler(http.server.BaseHTTPRequestHandler):
     """Minimal VM stand-in: 204 for every POST, recording what arrived."""
 
     captured: ClassVar[list[tuple[str, bytes]]] = []
+    headers_seen: ClassVar[list[dict]] = []
 
     def do_POST(self) -> None:
         length = int(self.headers.get("Content-Length", "0"))
         body = self.rfile.read(length)
         type(self).captured.append((self.path, body))
+        type(self).headers_seen.append(dict(self.headers))
         self.send_response(204)
         self.end_headers()
 
@@ -39,6 +41,7 @@ class _CaptureHandler(http.server.BaseHTTPRequestHandler):
 def vm_server():
     """Spin a real stdlib HTTP server on a random port; yield (url, captured)."""
     _CaptureHandler.captured = []
+    _CaptureHandler.headers_seen = []
     server = http.server.HTTPServer(("127.0.0.1", 0), _CaptureHandler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
@@ -65,9 +68,7 @@ def dead_port_url() -> str:
 
 
 def test_line_protocol_escapes_tag_values() -> None:
-    line = vm_metrics.line_protocol(
-        "m", 1, tags={"a": "x,y", "b": "k=v", "c": "back\\slash", "d": "plain"}, ts=100
-    )
+    line = vm_metrics.line_protocol("m", 1, tags={"a": "x,y", "b": "k=v", "c": "back\\slash", "d": "plain"}, ts=100)
     assert line == "m,a=x\\,y,b=k\\=v,c=back\\\\slash,d=plain 1 100"
 
 
@@ -79,10 +80,7 @@ def test_line_protocol_escapes_measurement_spaces() -> None:
 def test_write_passes_explicit_ts_through(vm_server) -> None:
     url, captured = vm_server
     writer = vm_metrics.VMWriter(url=url)
-    assert (
-        writer.write("embedding_request", 1, tags={"mode": "infer"}, ts=1699999999)
-        is True
-    )
+    assert writer.write("embedding_request", 1, tags={"mode": "infer"}, ts=1699999999) is True
     assert len(captured) == 1
     path, body = captured[0]
     assert body == b"embedding_request,mode=infer 1 1699999999"
@@ -104,6 +102,30 @@ def test_singleton_honors_env_set_before_first_write(vm_server) -> None:
         assert vm_metrics.write_metric("embedding_probe", 1) is True
     assert len(captured) == 1
     assert url in vm_metrics._writer.url
+
+
+def test_writer_sends_basic_auth_header_from_init(vm_server) -> None:
+    """VM servers fronted by raw -httpAuth.* flags need the Authorization
+    header; the writer without auth sent none (silent 401s)."""
+    url, _captured = vm_server
+    import base64
+
+    writer = vm_metrics.VMWriter(url=url, auth="op:seekrit")
+    assert writer.write("embedding_probe", 1) is True
+    seen = _CaptureHandler.headers_seen[-1]
+    token = base64.b64encode(b"op:seekrit").decode("ascii")
+    assert seen.get("Authorization") == f"Basic {token}"
+
+
+def test_writer_auth_env_fallback_and_absence(vm_server, monkeypatch) -> None:
+    url, _captured = vm_server
+    monkeypatch.setenv(vm_metrics.ENV_AUTH, "envuser:envpass")
+    vm_metrics.VMWriter(url=url).write("embedding_probe", 1)
+    seen = _CaptureHandler.headers_seen[-1]
+    assert "Authorization" in seen
+    monkeypatch.delenv(vm_metrics.ENV_AUTH, raising=False)
+    vm_metrics.VMWriter(url=url).write("embedding_probe", 1)
+    assert "Authorization" not in _CaptureHandler.headers_seen[-1]
 
 
 def test_effective_url_defaults_then_env(vm_server) -> None:
@@ -129,7 +151,8 @@ def test_module_top_level_imports_are_stdlib_only() -> None:
 
 
 def test_env_var_is_embed_namespaced() -> None:
-    # Vendoring delta guard: the only behavioral divergence from the canonical
-    # toolkit/metrics.py is the env var name.
+    # Vendoring delta guard: the only behavioral divergences from the canonical
+    # toolkit/metrics.py are the env var names.
     assert vm_metrics.ENV_URL == "MODAL_EMBED_VM_URL"
+    assert vm_metrics.ENV_AUTH == "MODAL_EMBED_VM_AUTH"
     assert vm_metrics.DEFAULT_URL == "http://localhost:8428"
