@@ -1,3 +1,5 @@
+<img src="https://kylebrodeur.xyz/brand/readme-headers/modal-embedding-server.png" alt="Modal Embedding System: a generic GPU embedding service with a sync protocol" width="100%">
+
 # Modal Embedding System
 
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
