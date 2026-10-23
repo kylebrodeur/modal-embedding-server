@@ -115,7 +115,7 @@ class EmbeddingService:
 # call that returns as soon as the container answers.
 
 
-@app.function(image=image)
+@app.function(image=image, timeout=600)
 def warm_probe() -> str:
     t0 = time.perf_counter()
     EmbeddingService().embed.remote(["warm"])
